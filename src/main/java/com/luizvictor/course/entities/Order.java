@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -22,4 +24,11 @@ public class Order {
     private User user;
     @Enumerated(value = EnumType.STRING)
     private OrderStatus orderStatus;
+    @OneToMany(mappedBy = "order")
+    private final List<OrderItem> itens = new ArrayList<>();
+
+    public void addItem(OrderItem item) {
+        item.setOrder(this);
+        this.itens.add(item);
+    }
 }

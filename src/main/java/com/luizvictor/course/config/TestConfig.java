@@ -1,10 +1,8 @@
 package com.luizvictor.course.config;
 
 import com.luizvictor.course.entities.*;
-import com.luizvictor.course.repositories.CategoryRepository;
-import com.luizvictor.course.repositories.OrderRepository;
-import com.luizvictor.course.repositories.ProductRepository;
-import com.luizvictor.course.repositories.UserRepository;
+import com.luizvictor.course.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -15,27 +13,34 @@ import java.util.Arrays;
 @Configuration
 @Profile("test")
 public class TestConfig implements CommandLineRunner {
-    private final UserRepository userRepository;
-    private final OrderRepository orderRepository;
-    private final CategoryRepository categoryRepository;
-    private final ProductRepository productRepository;
-
-    public TestConfig(
-            UserRepository userRepository,
-            OrderRepository orderRepository,
-            CategoryRepository categoryRepository,
-            ProductRepository productRepository
-    ) {
-        this.userRepository = userRepository;
-        this.orderRepository = orderRepository;
-        this.categoryRepository = categoryRepository;
-        this.productRepository = productRepository;
-    }
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private OrderRepository orderRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Override
     public void run(String... args) {
-        User user1 = new User(null, "John Doe", "john@email.com", "1111-1111", "123");
-        User user2 = new User(null, "Joanna Doe", "joanna@email.com", "1111-1111", "123");
+        User user1 = new User(
+                null,
+                "John Doe",
+                "john@email.com",
+                "1111-1111",
+                "123"
+        );
+
+        User user2 = new User(
+                null,
+                "Joanna Doe",
+                "joanna@email.com",
+                "1111-1111",
+                "123"
+        );
 
         Category category1 = new Category(null, "Computers");
         Category category2 = new Category(null, "Books");
@@ -72,10 +77,16 @@ public class TestConfig implements CommandLineRunner {
         Order order2 = new Order(null, user2, OrderStatus.PAID);
         Order order3 = new Order(null, user1, OrderStatus.CANCELED);
 
+        OrderItem orderItem1 = new OrderItem(1, product3, order1);
+        OrderItem orderItem2 = new OrderItem(2, product2, order1);
+
+        order1.addItem(orderItem1);
+        order1.addItem(orderItem2);
 
         userRepository.saveAll(Arrays.asList(user1, user2));
         categoryRepository.saveAll(Arrays.asList(category1, category2, category3));
         productRepository.saveAll(Arrays.asList(product1, product2, product3));
         orderRepository.saveAll(Arrays.asList(order1, order2, order3));
+        orderItemRepository.saveAll(Arrays.asList(orderItem1, orderItem2));
     }
 }
