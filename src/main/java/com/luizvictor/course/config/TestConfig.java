@@ -73,9 +73,9 @@ public class TestConfig implements CommandLineRunner {
                 category2
         );
 
-        Order order1 = new Order(null, user1, OrderStatus.DELIVERED);
-        Order order2 = new Order(null, user2, OrderStatus.PAID);
-        Order order3 = new Order(null, user1, OrderStatus.CANCELED);
+        Order order1 = new Order(user1, OrderStatus.DELIVERED);
+        Order order2 = new Order(user2, OrderStatus.PAID);
+        Order order3 = new Order(user1, OrderStatus.CANCELED);
 
         OrderItem orderItem1 = new OrderItem(1, product3, order1);
         OrderItem orderItem2 = new OrderItem(2, product2, order1);
@@ -88,5 +88,9 @@ public class TestConfig implements CommandLineRunner {
         productRepository.saveAll(Arrays.asList(product1, product2, product3));
         orderRepository.saveAll(Arrays.asList(order1, order2, order3));
         orderItemRepository.saveAll(Arrays.asList(orderItem1, orderItem2));
+
+        Payment payment = new Payment(null, order2);
+        order2.setPayment(payment);
+        orderRepository.save(order2);
     }
 }
