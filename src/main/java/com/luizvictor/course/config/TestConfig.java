@@ -81,7 +81,7 @@ public class TestConfig implements CommandLineRunner {
         OrderItem orderItem2 = new OrderItem(2, product2, order1);
 
         order1.addItem(orderItem1);
-        order1.addItem(orderItem2);
+        order2.addItem(orderItem2);
 
         userRepository.saveAll(Arrays.asList(user1, user2));
         categoryRepository.saveAll(Arrays.asList(category1, category2, category3));

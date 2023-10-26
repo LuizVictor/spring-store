@@ -1,10 +1,10 @@
 package com.luizvictor.course.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +36,10 @@ public class Order {
     public void addItem(OrderItem item) {
         item.setOrder(this);
         this.itens.add(item);
+    }
+
+    public BigDecimal getTotal() {
+        return itens.stream().map(OrderItem::getSubTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public void setPayment(Payment payment) {

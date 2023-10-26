@@ -32,6 +32,10 @@ public class OrderItem {
         this.order = order;
     }
 
+    public BigDecimal getSubTotal() {
+        return price.multiply(BigDecimal.valueOf(quantity));
+    }
+
     public void setOrder(Order order) {
         this.order = order;
     }
