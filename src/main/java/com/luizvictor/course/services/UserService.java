@@ -26,6 +26,12 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    public User update(Long id, User userUpdate) {
+        User user = userRepository.getReferenceById(id);
+        user.update(userUpdate);
+        return userRepository.save(user);
+    }
+
     public void delete(Long id) {
         userRepository.deleteById(id);
     }

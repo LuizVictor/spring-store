@@ -18,4 +18,11 @@ public class User {
     private String email;
     private String phone;
     private String password;
+
+    public void update(User userUpdate) {
+        this.name = userUpdate.getName();
+        this.email = userUpdate.getEmail();
+        this.phone = userUpdate.getPhone();
+        this.password = userUpdate.getPassword();
+    }
 }
