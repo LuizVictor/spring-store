@@ -21,11 +21,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserDetailDto save(UserDto userDto) {
-        User user = new User(userDto);
-        return new UserDetailDto(userRepository.save(user));
-    }
-
     public List<UserDetailDto> findAll() {
         return userRepository.findAll().stream().map(UserDetailDto::new).toList();
     }
@@ -33,6 +28,11 @@ public class UserService {
     public UserDetailDto findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFountException("User not found"));
         return new UserDetailDto(user);
+    }
+
+    public UserDetailDto save(UserDto userDto) {
+        User user = new User(userDto);
+        return new UserDetailDto(userRepository.save(user));
     }
 
     public UserDetailDto update(Long id, UserUpdateDto userUpdate) {

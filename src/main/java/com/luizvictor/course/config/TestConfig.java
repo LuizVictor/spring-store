@@ -1,9 +1,8 @@
 package com.luizvictor.course.config;
 
 import com.luizvictor.course.entities.*;
-import com.luizvictor.course.entities.Order;
-import com.luizvictor.course.entities.OrderItem;
-import com.luizvictor.course.entities.OrderStatus;
+import com.luizvictor.course.entities.products.Product;
+import com.luizvictor.course.entities.products.dto.ProductDto;
 import com.luizvictor.course.entities.user.User;
 import com.luizvictor.course.entities.user.dto.UserDto;
 import com.luizvictor.course.repositories.*;
@@ -29,44 +28,28 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private OrderItemRepository orderItemRepository;
 
+    private User createUser(String name, String email, String phone, String password) {
+        UserDto userDto = new UserDto(name, email, phone, password);
+        return new User(userDto);
+    }
+
+    private Product createProduct(String name, String description, String price, Category category) {
+        ProductDto productDto = new ProductDto(name, description, new BigDecimal(price), category.getId());
+        return new Product(productDto, category);
+    }
+
     @Override
     public void run(String... args) {
-        UserDto userDto1 = new UserDto("John Doe", "john@email.com", "1111-1111", "123");
-        User user1 = new User(userDto1);
+        User user1 = createUser("John Doe", "john@email.com", "111-111", "123");
+        User user2 = createUser("Joanna Doe", "joanna@email.com", "111-222", "321");
 
-        UserDto userDto2 = new UserDto("Joanna Doe", "joanna@email.com", "1111-1111", "123");
-        User user2 = new User(userDto2);
+        Category category1 = new Category("Computers");
+        Category category2 = new Category("Books");
+        Category category3 = new Category("Electronics");
 
-        Category category1 = new Category(null, "Computers");
-        Category category2 = new Category(null, "Books");
-        Category category3 = new Category(null, "Electronics");
-
-        Product product1 = new Product(
-                null,
-                "Macbook",
-                "apple notebook",
-                new BigDecimal("1000"),
-                "url_image",
-                category1
-        );
-
-        Product product2 = new Product(
-                null,
-                "Iphone",
-                "apple smartphone",
-                new BigDecimal("999"),
-                "url_image",
-                category3
-        );
-
-        Product product3 = new Product(
-                null,
-                "The man in the high castle",
-                "dystopic book",
-                new BigDecimal("30"),
-                "url_image",
-                category2
-        );
+        Product product1 = createProduct("Macbook", "apple notebook", "1000", category1);
+        Product product2 = createProduct("Iphone", "apple smartphone", "800", category3);
+        Product product3 = createProduct("The man in the high castle", "dystopic book", "30", category2);
 
         Order order1 = new Order(user1, OrderStatus.DELIVERED);
         Order order2 = new Order(user2, OrderStatus.PAID);

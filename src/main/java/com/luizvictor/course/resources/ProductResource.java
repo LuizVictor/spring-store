@@ -1,13 +1,13 @@
 package com.luizvictor.course.resources;
 
-import com.luizvictor.course.entities.Product;
+import com.luizvictor.course.entities.products.dto.ProductDetailDto;
+import com.luizvictor.course.entities.products.dto.ProductDto;
 import com.luizvictor.course.services.ProductService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -20,14 +20,21 @@ public class ProductResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> findAll() {
-        List<Product> products = productService.findAll();
+    public ResponseEntity<List<ProductDetailDto>> findAll() {
+        List<ProductDetailDto> products = productService.findAll();
         return ResponseEntity.ok().body(products);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Product> findById(@PathVariable Long id) {
-        Product product = productService.findById(id);
+    public ResponseEntity<ProductDetailDto> findById(@PathVariable Long id) {
+        ProductDetailDto product = productService.findById(id);
         return ResponseEntity.ok().body(product);
+    }
+
+    @PostMapping
+    public ResponseEntity<ProductDetailDto> save(@RequestBody ProductDto productDto, UriComponentsBuilder uriBuilder) {
+        ProductDetailDto productDetailDto = productService.save(productDto);
+        URI uri = uriBuilder.path("/products/{id}").buildAndExpand(productDetailDto.id()).toUri();
+        return ResponseEntity.created(uri).body(productDetailDto);
     }
 }
