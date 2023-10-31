@@ -1,6 +1,6 @@
-package com.luizvictor.course.entities.products.dto;
+package com.luizvictor.course.entities.product.dto;
 
-import com.luizvictor.course.entities.products.Product;
+import com.luizvictor.course.entities.product.Product;
 
 import java.math.BigDecimal;
 

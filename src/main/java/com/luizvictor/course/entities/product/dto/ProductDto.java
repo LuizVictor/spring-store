@@ -1,4 +1,4 @@
-package com.luizvictor.course.entities.products.dto;
+package com.luizvictor.course.entities.product.dto;
 
 import java.math.BigDecimal;
 

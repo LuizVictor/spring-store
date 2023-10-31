@@ -1,8 +1,8 @@
 package com.luizvictor.course.config;
 
 import com.luizvictor.course.entities.*;
-import com.luizvictor.course.entities.products.Product;
-import com.luizvictor.course.entities.products.dto.ProductDto;
+import com.luizvictor.course.entities.product.Product;
+import com.luizvictor.course.entities.product.dto.ProductDto;
 import com.luizvictor.course.entities.user.User;
 import com.luizvictor.course.entities.user.dto.UserDto;
 import com.luizvictor.course.repositories.*;

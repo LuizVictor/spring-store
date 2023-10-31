@@ -1,7 +1,7 @@
-package com.luizvictor.course.entities.products;
+package com.luizvictor.course.entities.product;
 
 import com.luizvictor.course.entities.Category;
-import com.luizvictor.course.entities.products.dto.ProductDto;
+import com.luizvictor.course.entities.product.dto.ProductDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

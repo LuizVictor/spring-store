@@ -1,7 +1,7 @@
 package com.luizvictor.course.resources;
 
-import com.luizvictor.course.entities.products.dto.ProductDetailDto;
-import com.luizvictor.course.entities.products.dto.ProductDto;
+import com.luizvictor.course.entities.product.dto.ProductDetailDto;
+import com.luizvictor.course.entities.product.dto.ProductDto;
 import com.luizvictor.course.services.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

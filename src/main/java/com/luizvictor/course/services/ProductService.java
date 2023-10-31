@@ -1,9 +1,9 @@
 package com.luizvictor.course.services;
 
 import com.luizvictor.course.entities.Category;
-import com.luizvictor.course.entities.products.Product;
-import com.luizvictor.course.entities.products.dto.ProductDetailDto;
-import com.luizvictor.course.entities.products.dto.ProductDto;
+import com.luizvictor.course.entities.product.Product;
+import com.luizvictor.course.entities.product.dto.ProductDetailDto;
+import com.luizvictor.course.entities.product.dto.ProductDto;
 import com.luizvictor.course.exceptions.NotFountException;
 import com.luizvictor.course.repositories.CategoryRepository;
 import com.luizvictor.course.repositories.ProductRepository;
