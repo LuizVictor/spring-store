@@ -1,6 +1,9 @@
 package com.luizvictor.course.services;
 
-import com.luizvictor.course.entities.User;
+import com.luizvictor.course.entities.user.User;
+import com.luizvictor.course.entities.user.dto.UserDetailDto;
+import com.luizvictor.course.entities.user.dto.UserDto;
+import com.luizvictor.course.entities.user.dto.UserUpdateDto;
 import com.luizvictor.course.exceptions.DatabaseException;
 import com.luizvictor.course.exceptions.NotFountException;
 import com.luizvictor.course.repositories.UserRepository;
@@ -18,23 +21,25 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User save(User user) {
-        return userRepository.save(user);
+    public UserDetailDto save(UserDto userDto) {
+        User user = new User(userDto);
+        return new UserDetailDto(userRepository.save(user));
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserDetailDto> findAll() {
+        return userRepository.findAll().stream().map(UserDetailDto::new).toList();
     }
 
-    public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new NotFountException("User not found"));
+    public UserDetailDto findById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFountException("User not found"));
+        return new UserDetailDto(user);
     }
 
-    public User update(Long id, User userUpdate) {
+    public UserDetailDto update(Long id, UserUpdateDto userUpdate) {
         try {
             User user = userRepository.getReferenceById(id);
             user.update(userUpdate);
-            return userRepository.save(user);
+            return new UserDetailDto(userRepository.save(user));
         }  catch (EntityNotFoundException e) {
             throw new NotFountException("User not found");
         }

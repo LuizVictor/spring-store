@@ -1,6 +1,8 @@
 package com.luizvictor.course.resources;
 
-import com.luizvictor.course.entities.User;
+import com.luizvictor.course.entities.user.dto.UserDetailDto;
+import com.luizvictor.course.entities.user.dto.UserDto;
+import com.luizvictor.course.entities.user.dto.UserUpdateDto;
 import com.luizvictor.course.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,27 +21,27 @@ public class UserResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> findAll() {
-        List<User> users = userService.findAll();
+    public ResponseEntity<List<UserDetailDto>> findAll() {
+        List<UserDetailDto> users = userService.findAll();
         return ResponseEntity.ok().body(users);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id) {
-        User user = userService.findById(id);
+    public ResponseEntity<UserDetailDto> findById(@PathVariable Long id) {
+        UserDetailDto user = userService.findById(id);
         return ResponseEntity.ok().body(user);
     }
 
     @PostMapping
-    public ResponseEntity<User> create(@RequestBody User user, UriComponentsBuilder uriBuilder) {
-        user = userService.save(user);
-        URI uri = uriBuilder.path("/users/{id}").buildAndExpand(user.getId()).toUri();
-        return ResponseEntity.created(uri).body(user);
+    public ResponseEntity<UserDetailDto> create(@RequestBody UserDto user, UriComponentsBuilder uriBuilder) {
+        UserDetailDto userDetailDto = userService.save(user);
+        URI uri = uriBuilder.path("/users/{id}").buildAndExpand(userDetailDto.id()).toUri();
+        return ResponseEntity.created(uri).body(userDetailDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User userBody) {
-        User user = userService.update(id, userBody);
+    public ResponseEntity<UserDetailDto> update(@PathVariable Long id, @RequestBody UserUpdateDto userBody) {
+        UserDetailDto user = userService.update(id, userBody);
         return ResponseEntity.ok().body(user);
     }
 

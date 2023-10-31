@@ -1,6 +1,11 @@
 package com.luizvictor.course.config;
 
 import com.luizvictor.course.entities.*;
+import com.luizvictor.course.entities.Order;
+import com.luizvictor.course.entities.OrderItem;
+import com.luizvictor.course.entities.OrderStatus;
+import com.luizvictor.course.entities.user.User;
+import com.luizvictor.course.entities.user.dto.UserDto;
 import com.luizvictor.course.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -26,21 +31,11 @@ public class TestConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        User user1 = new User(
-                null,
-                "John Doe",
-                "john@email.com",
-                "1111-1111",
-                "123"
-        );
+        UserDto userDto1 = new UserDto("John Doe", "john@email.com", "1111-1111", "123");
+        User user1 = new User(userDto1);
 
-        User user2 = new User(
-                null,
-                "Joanna Doe",
-                "joanna@email.com",
-                "1111-1111",
-                "123"
-        );
+        UserDto userDto2 = new UserDto("Joanna Doe", "joanna@email.com", "1111-1111", "123");
+        User user2 = new User(userDto2);
 
         Category category1 = new Category(null, "Computers");
         Category category2 = new Category(null, "Books");

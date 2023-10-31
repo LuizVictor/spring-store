@@ -1,5 +1,6 @@
 package com.luizvictor.course.entities;
 
+import com.luizvictor.course.entities.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
