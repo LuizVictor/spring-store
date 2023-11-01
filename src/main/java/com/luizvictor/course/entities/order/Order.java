@@ -1,6 +1,6 @@
 package com.luizvictor.course.entities.order;
 
-import com.luizvictor.course.entities.OrderItem;
+import com.luizvictor.course.entities.orderItem.OrderItem;
 import com.luizvictor.course.entities.Payment;
 import com.luizvictor.course.entities.user.User;
 import jakarta.persistence.*;

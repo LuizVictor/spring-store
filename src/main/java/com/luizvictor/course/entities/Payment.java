@@ -1,6 +1,5 @@
 package com.luizvictor.course.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.luizvictor.course.entities.order.Order;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

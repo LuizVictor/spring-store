@@ -1,4 +1,4 @@
-package com.luizvictor.course.entities;
+package com.luizvictor.course.entities.orderItem;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.luizvictor.course.entities.order.Order;
@@ -28,7 +28,7 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    public OrderItem(Integer quantity, Product product) {
+    public OrderItem(Integer quantity, Product product, Order order) {
         this.quantity = quantity;
         this.price = product.getPrice();
         this.product = product;

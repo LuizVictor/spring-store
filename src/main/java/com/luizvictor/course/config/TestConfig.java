@@ -3,6 +3,7 @@ package com.luizvictor.course.config;
 import com.luizvictor.course.entities.*;
 import com.luizvictor.course.entities.order.Order;
 import com.luizvictor.course.entities.order.OrderStatus;
+import com.luizvictor.course.entities.orderItem.OrderItem;
 import com.luizvictor.course.entities.product.Product;
 import com.luizvictor.course.entities.product.dto.ProductDto;
 import com.luizvictor.course.entities.user.User;
@@ -57,11 +58,11 @@ public class TestConfig implements CommandLineRunner {
         Order order2 = new Order(user2, OrderStatus.PAID);
         Order order3 = new Order(user1, OrderStatus.CANCELED);
 
-        OrderItem orderItem1 = new OrderItem(2, product3);
-        OrderItem orderItem2 = new OrderItem(1, product2);
+        OrderItem orderItem1 = new OrderItem(2, product3, order1);
+        OrderItem orderItem2 = new OrderItem(1, product2, order2);
 
         order1.addItem(orderItem1);
-//        order2.addItem(orderItem2);
+        order2.addItem(orderItem2);
 
         userRepository.saveAll(Arrays.asList(user1, user2));
         categoryRepository.saveAll(Arrays.asList(category1, category2, category3));
