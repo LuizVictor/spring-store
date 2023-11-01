@@ -4,7 +4,7 @@ import com.luizvictor.course.entities.Category;
 import com.luizvictor.course.entities.product.Product;
 import com.luizvictor.course.entities.product.dto.ProductDetailDto;
 import com.luizvictor.course.entities.product.dto.ProductDto;
-import com.luizvictor.course.exceptions.NotFountException;
+import com.luizvictor.course.exceptions.NotFoundException;
 import com.luizvictor.course.repositories.CategoryRepository;
 import com.luizvictor.course.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class ProductService {
     }
 
     public ProductDetailDto findById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new NotFountException("Product not found!"));
+        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product not found!"));
         return new ProductDetailDto(product);
     }
 

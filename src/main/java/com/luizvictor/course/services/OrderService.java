@@ -1,6 +1,8 @@
 package com.luizvictor.course.services;
 
-import com.luizvictor.course.entities.Order;
+import com.luizvictor.course.entities.order.Order;
+import com.luizvictor.course.entities.order.OrderDetailDto;
+import com.luizvictor.course.exceptions.NotFoundException;
 import com.luizvictor.course.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +16,12 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public List<Order> findAll() {
-        return orderRepository.findAll();
+    public List<OrderDetailDto> findAll() {
+        return orderRepository.findAll().stream().map(OrderDetailDto::new).toList();
     }
 
-    public Order findById(Long id) {
-        return orderRepository.findById(id).orElse(null);
+    public OrderDetailDto findById(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Order not found!"));
+        return new OrderDetailDto(order);
     }
 }

@@ -1,6 +1,6 @@
 package com.luizvictor.course.resources;
 
-import com.luizvictor.course.entities.Order;
+import com.luizvictor.course.entities.order.OrderDetailDto;
 import com.luizvictor.course.services.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,14 +20,14 @@ public class OrderResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> findAll() {
-        List<Order> orders = orderService.findAll();
+    public ResponseEntity<List<OrderDetailDto>> findAll() {
+        List<OrderDetailDto> orders = orderService.findAll();
         return ResponseEntity.ok().body(orders);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Order> findById(@PathVariable Long id) {
-        Order order = orderService.findById(id);
+    public ResponseEntity<OrderDetailDto> findById(@PathVariable Long id) {
+        OrderDetailDto order = orderService.findById(id);
         return ResponseEntity.ok().body(order);
     }
 }

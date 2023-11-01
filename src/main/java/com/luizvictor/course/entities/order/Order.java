@@ -1,5 +1,7 @@
-package com.luizvictor.course.entities;
+package com.luizvictor.course.entities.order;
 
+import com.luizvictor.course.entities.OrderItem;
+import com.luizvictor.course.entities.Payment;
 import com.luizvictor.course.entities.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -19,8 +21,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private final LocalDateTime createdAt = LocalDateTime.now();
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
     @Enumerated(value = EnumType.STRING)
@@ -28,7 +29,8 @@ public class Order {
     @OneToMany(mappedBy = "order")
     private List<OrderItem> itens = new ArrayList<>();
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    private Payment payment = null;
+    private Payment payment;
+    private final LocalDateTime createdAt = LocalDateTime.now();
 
     public Order(User user, OrderStatus orderStatus) {
         this.user = user;

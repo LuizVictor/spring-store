@@ -1,4 +1,4 @@
-package com.luizvictor.course.entities;
+package com.luizvictor.course.entities.order;
 
 public enum OrderStatus {
     WAITING_PAYMENT,

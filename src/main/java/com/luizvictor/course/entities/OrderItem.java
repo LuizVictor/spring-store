@@ -1,6 +1,7 @@
 package com.luizvictor.course.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.luizvictor.course.entities.order.Order;
 import com.luizvictor.course.entities.product.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -27,11 +28,10 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    public OrderItem(Integer quantity, Product product, Order order) {
+    public OrderItem(Integer quantity, Product product) {
         this.quantity = quantity;
         this.price = product.getPrice();
         this.product = product;
-        this.order = order;
     }
 
     public BigDecimal getSubTotal() {

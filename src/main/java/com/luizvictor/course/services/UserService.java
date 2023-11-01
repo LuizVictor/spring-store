@@ -5,7 +5,7 @@ import com.luizvictor.course.entities.user.dto.UserDetailDto;
 import com.luizvictor.course.entities.user.dto.UserDto;
 import com.luizvictor.course.entities.user.dto.UserUpdateDto;
 import com.luizvictor.course.exceptions.DatabaseException;
-import com.luizvictor.course.exceptions.NotFountException;
+import com.luizvictor.course.exceptions.NotFoundException;
 import com.luizvictor.course.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,7 +26,7 @@ public class UserService {
     }
 
     public UserDetailDto findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFountException("User not found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
         return new UserDetailDto(user);
     }
 
@@ -41,7 +41,7 @@ public class UserService {
             user.update(userUpdate);
             return new UserDetailDto(userRepository.save(user));
         }  catch (EntityNotFoundException e) {
-            throw new NotFountException("User not found");
+            throw new NotFoundException("User not found");
         }
     }
 

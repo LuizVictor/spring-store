@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class CustomExceptionHandler {
-    @ExceptionHandler(NotFountException.class)
-    public ResponseEntity<StandardException> notFound(NotFountException exception, HttpServletRequest request) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<StandardException> notFound(NotFoundException exception, HttpServletRequest request) {
         String error = "Resource not found";
         HttpStatus status = HttpStatus.NOT_FOUND;
         StandardException standardException = new StandardException(
