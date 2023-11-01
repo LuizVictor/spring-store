@@ -26,7 +26,7 @@ public class Order {
     private User user;
     @Enumerated(value = EnumType.STRING)
     private OrderStatus orderStatus;
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private List<OrderItem> itens = new ArrayList<>();
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Payment payment;

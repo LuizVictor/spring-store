@@ -59,7 +59,7 @@ public class TestConfig implements CommandLineRunner {
         Order order3 = new Order(user1, OrderStatus.CANCELED);
 
         OrderItem orderItem1 = new OrderItem(2, product3, order1);
-        OrderItem orderItem2 = new OrderItem(1, product2, order2);
+        OrderItem orderItem2 = new OrderItem(1, product2, order1);
 
         order1.addItem(orderItem1);
         order2.addItem(orderItem2);

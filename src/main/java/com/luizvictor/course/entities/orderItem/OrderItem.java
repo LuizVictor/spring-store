@@ -32,6 +32,7 @@ public class OrderItem {
         this.quantity = quantity;
         this.price = product.getPrice();
         this.product = product;
+        this.order = order;
     }
 
     public BigDecimal getSubTotal() {

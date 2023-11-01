@@ -1,13 +1,13 @@
 package com.luizvictor.course.resources;
 
-import com.luizvictor.course.entities.order.OrderDetailDto;
+import com.luizvictor.course.entities.order.dto.OrderDetailDto;
+import com.luizvictor.course.entities.order.dto.OrderDto;
 import com.luizvictor.course.services.OrderService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -29,5 +29,12 @@ public class OrderResource {
     public ResponseEntity<OrderDetailDto> findById(@PathVariable Long id) {
         OrderDetailDto order = orderService.findById(id);
         return ResponseEntity.ok().body(order);
+    }
+
+    @PostMapping
+    public ResponseEntity<OrderDetailDto> save(@RequestBody OrderDto orderDto, UriComponentsBuilder uriBuilder) {
+        OrderDetailDto order = orderService.save(orderDto);
+        URI uri = uriBuilder.path("/users/{id}").buildAndExpand(order.id()).toUri();
+        return ResponseEntity.created(uri).body(order);
     }
 }
