@@ -1,7 +1,6 @@
 package com.luizvictor.course.entities.order;
 
 import com.luizvictor.course.entities.orderItem.OrderItem;
-import com.luizvictor.course.entities.Payment;
 import com.luizvictor.course.entities.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,8 +27,6 @@ public class Order {
     private OrderStatus orderStatus;
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private List<OrderItem> itens = new ArrayList<>();
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    private Payment payment;
     private final LocalDateTime createdAt = LocalDateTime.now();
 
     public Order(User user, OrderStatus orderStatus) {
@@ -44,10 +41,6 @@ public class Order {
 
     public BigDecimal getTotal() {
         return itens.stream().map(OrderItem::getSubTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public void setPayment(Payment payment) {
-        this.payment = payment;
     }
 
     @Override
