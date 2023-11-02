@@ -29,9 +29,13 @@ public class Invoice {
     private List<InvoiceItem> itens = new ArrayList<>();
     private final LocalDateTime createdAt = LocalDateTime.now();
 
-    public Invoice(User user, InvoiceStatus invoiceStatus) {
+    public Invoice(User user) {
         this.user = user;
-        this.invoiceStatus = invoiceStatus;
+        this.invoiceStatus = InvoiceStatus.PAID;
+    }
+
+    public void updateStatus(InvoiceStatus status) {
+        this.invoiceStatus = status;
     }
 
     public void addItem(InvoiceItem item) {

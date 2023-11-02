@@ -2,6 +2,7 @@ package com.luizvictor.course.resources;
 
 import com.luizvictor.course.entities.invoice.dto.InvoiceDetailDto;
 import com.luizvictor.course.entities.invoice.dto.InvoiceDto;
+import com.luizvictor.course.entities.invoice.dto.InvoiceStatusDto;
 import com.luizvictor.course.services.InvoiceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,20 +22,26 @@ public class InvoiceResource {
 
     @GetMapping
     public ResponseEntity<List<InvoiceDetailDto>> findAll() {
-        List<InvoiceDetailDto> orders = invoiceService.findAll();
-        return ResponseEntity.ok().body(orders);
+        List<InvoiceDetailDto> invoices = invoiceService.findAll();
+        return ResponseEntity.ok().body(invoices);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<InvoiceDetailDto> findById(@PathVariable Long id) {
-        InvoiceDetailDto order = invoiceService.findById(id);
-        return ResponseEntity.ok().body(order);
+        InvoiceDetailDto invoice = invoiceService.findById(id);
+        return ResponseEntity.ok().body(invoice);
     }
 
     @PostMapping
-    public ResponseEntity<InvoiceDetailDto> save(@RequestBody InvoiceDto invoiceDto, UriComponentsBuilder uriBuilder) {
-        InvoiceDetailDto order = invoiceService.save(invoiceDto);
-        URI uri = uriBuilder.path("/users/{id}").buildAndExpand(order.id()).toUri();
-        return ResponseEntity.created(uri).body(order);
+    public ResponseEntity<InvoiceDetailDto> save(@RequestBody InvoiceDto dto, UriComponentsBuilder uriBuilder) {
+        InvoiceDetailDto invoice = invoiceService.save(dto);
+        URI uri = uriBuilder.path("/users/{id}").buildAndExpand(invoice.id()).toUri();
+        return ResponseEntity.created(uri).body(invoice);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<InvoiceDetailDto> updateStatus(@PathVariable Long id, @RequestBody InvoiceStatusDto dto) {
+        InvoiceDetailDto invoice = invoiceService.updateStatus(id, dto);
+        return ResponseEntity.ok().body(invoice);
     }
 }

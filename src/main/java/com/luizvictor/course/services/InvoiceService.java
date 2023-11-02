@@ -3,6 +3,7 @@ package com.luizvictor.course.services;
 import com.luizvictor.course.entities.invoice.Invoice;
 import com.luizvictor.course.entities.invoice.dto.InvoiceDetailDto;
 import com.luizvictor.course.entities.invoice.dto.InvoiceDto;
+import com.luizvictor.course.entities.invoice.dto.InvoiceStatusDto;
 import com.luizvictor.course.entities.orderItem.InvoiceItem;
 import com.luizvictor.course.entities.orderItem.InvoiceItemDto;
 import com.luizvictor.course.entities.product.Product;
@@ -12,6 +13,7 @@ import com.luizvictor.course.repositories.InvoiceItemRepository;
 import com.luizvictor.course.repositories.InvoiceRepository;
 import com.luizvictor.course.repositories.ProductRepository;
 import com.luizvictor.course.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,18 +47,28 @@ public class InvoiceService {
         return new InvoiceDetailDto(invoice);
     }
 
-    public InvoiceDetailDto save(InvoiceDto invoiceDto) {
-        User user = userRepository.getReferenceById(invoiceDto.userId());
-        Invoice invoice = invoiceRepository.save(new Invoice(user, invoiceDto.status()));
-        List<InvoiceItem> items = saveItems(invoiceDto.items(), invoice);
+    public InvoiceDetailDto save(InvoiceDto dto) {
+        User user = userRepository.getReferenceById(dto.userId());
+        Invoice invoice = invoiceRepository.save(new Invoice(user));
+        List<InvoiceItem> items = saveItems(dto.items(), invoice);
         invoiceItemRepository.saveAll(items);
 
         return new InvoiceDetailDto(invoice);
     }
 
-    private List<InvoiceItem> saveItems(List<InvoiceItemDto> itemDto, Invoice invoice) {
+    public InvoiceDetailDto updateStatus(Long id, InvoiceStatusDto dto) {
+        try {
+            Invoice invoice = invoiceRepository.getReferenceById(id);
+            invoice.updateStatus(dto.status());
+            return new InvoiceDetailDto(invoiceRepository.save(invoice));
+        }  catch (EntityNotFoundException e) {
+            throw new NotFoundException("User not found");
+        }
+    }
+
+    private List<InvoiceItem> saveItems(List<InvoiceItemDto> dto, Invoice invoice) {
         List<InvoiceItem> items = new ArrayList<>();
-        for (InvoiceItemDto item : itemDto) {
+        for (InvoiceItemDto item : dto) {
             Product product = productRepository.getReferenceById(item.productId());
             InvoiceItem invoiceItem = new InvoiceItem(item.quantity(), product, invoice);
             invoice.addItem(invoiceItem);

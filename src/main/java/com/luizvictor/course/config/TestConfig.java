@@ -54,9 +54,11 @@ public class TestConfig implements CommandLineRunner {
         Product product2 = createProduct("Iphone", "apple smartphone", "800", category3);
         Product product3 = createProduct("The man in the high castle", "dystopic book", "30", category2);
 
-        Invoice invoice1 = new Invoice(user1, InvoiceStatus.DELIVERED);
-        Invoice invoice2 = new Invoice(user2, InvoiceStatus.PAID);
-        Invoice invoice3 = new Invoice(user1, InvoiceStatus.CANCELED);
+        Invoice invoice1 = new Invoice(user1);
+        Invoice invoice2 = new Invoice(user2);
+        Invoice invoice3 = new Invoice(user1);
+
+        invoice3.updateStatus(InvoiceStatus.CANCELED);
 
         InvoiceItem invoiceItem1 = new InvoiceItem(2, product3, invoice1);
         InvoiceItem invoiceItem2 = new InvoiceItem(1, product2, invoice1);

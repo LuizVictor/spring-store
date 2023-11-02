@@ -5,5 +5,5 @@ import com.luizvictor.course.entities.orderItem.InvoiceItemDto;
 
 import java.util.List;
 
-public record InvoiceDto(Long userId, List<InvoiceItemDto> items, InvoiceStatus status) {
+public record InvoiceDto(Long userId, List<InvoiceItemDto> items) {
 }
