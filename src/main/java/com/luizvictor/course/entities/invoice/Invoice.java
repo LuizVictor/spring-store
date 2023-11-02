@@ -25,7 +25,7 @@ public class Invoice {
     private User user;
     @Enumerated(value = EnumType.STRING)
     private InvoiceStatus invoiceStatus;
-    @OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "invoice")
     private List<InvoiceItem> itens = new ArrayList<>();
     private final LocalDateTime createdAt = LocalDateTime.now();
 

@@ -30,15 +30,15 @@ public class UserService {
         return new UserDetailDto(user);
     }
 
-    public UserDetailDto save(UserDto userDto) {
-        User user = new User(userDto);
+    public UserDetailDto save(UserDto dto) {
+        User user = new User(dto);
         return new UserDetailDto(userRepository.save(user));
     }
 
-    public UserDetailDto update(Long id, UserUpdateDto userUpdate) {
+    public UserDetailDto update(Long id, UserUpdateDto dto) {
         try {
             User user = userRepository.getReferenceById(id);
-            user.update(userUpdate);
+            user.update(dto);
             return new UserDetailDto(userRepository.save(user));
         }  catch (EntityNotFoundException e) {
             throw new NotFoundException("User not found");

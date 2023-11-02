@@ -30,9 +30,9 @@ public class ProductService {
         return new ProductDetailDto(product);
     }
 
-    public ProductDetailDto save(ProductDto productDto) {
-        Category category = categoryRepository.getReferenceById(productDto.category());
-        Product product = new Product(productDto, category);
+    public ProductDetailDto save(ProductDto dto) {
+        Category category = categoryRepository.getReferenceById(dto.category());
+        Product product = new Product(dto, category);
         return new ProductDetailDto(productRepository.save(product));
     }
 }

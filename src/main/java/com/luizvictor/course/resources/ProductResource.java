@@ -32,9 +32,9 @@ public class ProductResource {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDetailDto> save(@RequestBody ProductDto productDto, UriComponentsBuilder uriBuilder) {
-        ProductDetailDto productDetailDto = productService.save(productDto);
-        URI uri = uriBuilder.path("/products/{id}").buildAndExpand(productDetailDto.id()).toUri();
-        return ResponseEntity.created(uri).body(productDetailDto);
+    public ResponseEntity<ProductDetailDto> save(@RequestBody ProductDto dto, UriComponentsBuilder uriBuilder) {
+        ProductDetailDto product = productService.save(dto);
+        URI uri = uriBuilder.path("/products/{id}").buildAndExpand(product.id()).toUri();
+        return ResponseEntity.created(uri).body(product);
     }
 }

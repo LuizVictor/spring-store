@@ -33,15 +33,15 @@ public class UserResource {
     }
 
     @PostMapping
-    public ResponseEntity<UserDetailDto> create(@RequestBody UserDto user, UriComponentsBuilder uriBuilder) {
-        UserDetailDto userDetailDto = userService.save(user);
-        URI uri = uriBuilder.path("/users/{id}").buildAndExpand(userDetailDto.id()).toUri();
-        return ResponseEntity.created(uri).body(userDetailDto);
+    public ResponseEntity<UserDetailDto> create(@RequestBody UserDto dto, UriComponentsBuilder uriBuilder) {
+        UserDetailDto user = userService.save(dto);
+        URI uri = uriBuilder.path("/users/{id}").buildAndExpand(user.id()).toUri();
+        return ResponseEntity.created(uri).body(user);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDetailDto> update(@PathVariable Long id, @RequestBody UserUpdateDto userBody) {
-        UserDetailDto user = userService.update(id, userBody);
+    public ResponseEntity<UserDetailDto> update(@PathVariable Long id, @RequestBody UserUpdateDto dto) {
+        UserDetailDto user = userService.update(id, dto);
         return ResponseEntity.ok().body(user);
     }
 
