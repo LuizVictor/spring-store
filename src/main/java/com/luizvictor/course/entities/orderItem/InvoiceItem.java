@@ -1,7 +1,7 @@
 package com.luizvictor.course.entities.orderItem;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.luizvictor.course.entities.order.Order;
+import com.luizvictor.course.entities.invoice.Invoice;
 import com.luizvictor.course.entities.product.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import java.util.Objects;
 @Table(name = "order_itens")
 @NoArgsConstructor
 @Getter
-public class OrderItem {
+public class InvoiceItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,29 +26,29 @@ public class OrderItem {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "order_id")
-    private Order order;
+    private Invoice invoice;
 
-    public OrderItem(Integer quantity, Product product, Order order) {
+    public InvoiceItem(Integer quantity, Product product, Invoice invoice) {
         this.quantity = quantity;
         this.price = product.getPrice();
         this.product = product;
-        this.order = order;
+        this.invoice = invoice;
     }
 
     public BigDecimal getSubTotal() {
         return price.multiply(BigDecimal.valueOf(quantity));
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setInvoice(Invoice invoice) {
+        this.invoice = invoice;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OrderItem orderItem = (OrderItem) o;
-        return Objects.equals(id, orderItem.id);
+        InvoiceItem invoiceItem = (InvoiceItem) o;
+        return Objects.equals(id, invoiceItem.id);
     }
 
     @Override

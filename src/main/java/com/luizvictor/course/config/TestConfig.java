@@ -1,9 +1,9 @@
 package com.luizvictor.course.config;
 
 import com.luizvictor.course.entities.*;
-import com.luizvictor.course.entities.order.Order;
-import com.luizvictor.course.entities.order.OrderStatus;
-import com.luizvictor.course.entities.orderItem.OrderItem;
+import com.luizvictor.course.entities.invoice.Invoice;
+import com.luizvictor.course.entities.invoice.InvoiceStatus;
+import com.luizvictor.course.entities.orderItem.InvoiceItem;
 import com.luizvictor.course.entities.product.Product;
 import com.luizvictor.course.entities.product.dto.ProductDto;
 import com.luizvictor.course.entities.user.User;
@@ -23,13 +23,13 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private OrderRepository orderRepository;
+    private InvoiceRepository invoiceRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private OrderItemRepository orderItemRepository;
+    private InvoiceItemRepository invoiceItemRepository;
 
     private User createUser(String name, String email, String phone, String password) {
         UserDto userDto = new UserDto(name, email, phone, password);
@@ -54,20 +54,20 @@ public class TestConfig implements CommandLineRunner {
         Product product2 = createProduct("Iphone", "apple smartphone", "800", category3);
         Product product3 = createProduct("The man in the high castle", "dystopic book", "30", category2);
 
-        Order order1 = new Order(user1, OrderStatus.DELIVERED);
-        Order order2 = new Order(user2, OrderStatus.PAID);
-        Order order3 = new Order(user1, OrderStatus.CANCELED);
+        Invoice invoice1 = new Invoice(user1, InvoiceStatus.DELIVERED);
+        Invoice invoice2 = new Invoice(user2, InvoiceStatus.PAID);
+        Invoice invoice3 = new Invoice(user1, InvoiceStatus.CANCELED);
 
-        OrderItem orderItem1 = new OrderItem(2, product3, order1);
-        OrderItem orderItem2 = new OrderItem(1, product2, order1);
+        InvoiceItem invoiceItem1 = new InvoiceItem(2, product3, invoice1);
+        InvoiceItem invoiceItem2 = new InvoiceItem(1, product2, invoice1);
 
-        order1.addItem(orderItem1);
-        order2.addItem(orderItem2);
+        invoice1.addItem(invoiceItem1);
+        invoice2.addItem(invoiceItem2);
 
         userRepository.saveAll(Arrays.asList(user1, user2));
         categoryRepository.saveAll(Arrays.asList(category1, category2, category3));
         productRepository.saveAll(Arrays.asList(product1, product2, product3));
-        orderRepository.saveAll(Arrays.asList(order1, order2, order3));
-        orderItemRepository.saveAll(Arrays.asList(orderItem1, orderItem2));
+        invoiceRepository.saveAll(Arrays.asList(invoice1, invoice2, invoice3));
+        invoiceItemRepository.saveAll(Arrays.asList(invoiceItem1, invoiceItem2));
     }
 }
