@@ -25,7 +25,7 @@ public class AuthenticationResource {
     }
 
     @PostMapping
-    public ResponseEntity login(@RequestBody UserAuthDto dto) {
+    public ResponseEntity<UserAuthDetailDto> login(@RequestBody UserAuthDto dto) {
         var token = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
         Authentication auth = manager.authenticate(token);
         String tokenJWT = tokenService.generate((User) auth.getPrincipal());

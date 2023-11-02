@@ -5,10 +5,10 @@ import com.luizvictor.course.entities.user.dto.UserUpdateDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +31,7 @@ public class User implements UserDetails {
         this.name = dto.name();
         this.email = dto.email();
         this.phone = dto.phone();
-        this.password = dto.password();
+        this.password = new BCryptPasswordEncoder().encode(dto.password());
     }
 
     public void update(UserUpdateDto dto) {
