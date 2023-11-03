@@ -1,6 +1,7 @@
 package com.luizvictor.course.services;
 
 import com.luizvictor.course.entities.user.User;
+import com.luizvictor.course.entities.user.dto.UpdateRoleDto;
 import com.luizvictor.course.entities.user.dto.UserDetailDto;
 import com.luizvictor.course.entities.user.dto.UserDto;
 import com.luizvictor.course.entities.user.dto.UserUpdateDto;
@@ -33,6 +34,16 @@ public class UserService {
     public UserDetailDto save(UserDto dto) {
         User user = new User(dto);
         return new UserDetailDto(userRepository.save(user));
+    }
+
+    public UserDetailDto changeRole(Long id, UpdateRoleDto dto) {
+        try {
+            User user = userRepository.getReferenceById(id);
+            user.changeRole(dto);
+            return new UserDetailDto(userRepository.save(user));
+        } catch (EntityNotFoundException e) {
+            throw new NotFoundException("User not found");
+        }
     }
 
     public UserDetailDto update(Long id, UserUpdateDto dto) {

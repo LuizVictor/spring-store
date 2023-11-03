@@ -1,5 +1,6 @@
 package com.luizvictor.course.resources;
 
+import com.luizvictor.course.entities.user.dto.UpdateRoleDto;
 import com.luizvictor.course.entities.user.dto.UserDetailDto;
 import com.luizvictor.course.entities.user.dto.UserDto;
 import com.luizvictor.course.entities.user.dto.UserUpdateDto;
@@ -37,6 +38,12 @@ public class UserResource {
         UserDetailDto user = userService.save(dto);
         URI uri = uriBuilder.path("/users/{id}").buildAndExpand(user.id()).toUri();
         return ResponseEntity.created(uri).body(user);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserDetailDto> changeRole(@PathVariable Long id, @RequestBody UpdateRoleDto dto) {
+        UserDetailDto user = userService.changeRole(id, dto);
+        return ResponseEntity.ok().body(user);
     }
 
     @PutMapping("/{id}")

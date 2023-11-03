@@ -7,6 +7,7 @@ import com.luizvictor.course.entities.orderItem.InvoiceItem;
 import com.luizvictor.course.entities.product.Product;
 import com.luizvictor.course.entities.product.dto.ProductDto;
 import com.luizvictor.course.entities.user.User;
+import com.luizvictor.course.entities.user.dto.UpdateRoleDto;
 import com.luizvictor.course.entities.user.dto.UserDto;
 import com.luizvictor.course.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,8 @@ public class TestConfig implements CommandLineRunner {
     @Override
     public void run(String... args) {
         User user1 = createUser("John Doe", "john@email.com", "111-111", "123");
-        User user2 = createUser("Joanna Doe", "joanna@email.com", "111-222", "$2a$12$I306oS43SmUXeQcGbswJrehL3xzdsaWEQnuCwAZAJpAy/UwoSbvmO");
+        User user2 = createUser("Joanna Doe", "joanna@email.com", "111-222", "321");
+        user1.changeRole(new UpdateRoleDto("ADMIN"));
 
         Category category1 = new Category("Computers");
         Category category2 = new Category("Books");

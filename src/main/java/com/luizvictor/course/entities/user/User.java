@@ -1,5 +1,6 @@
 package com.luizvictor.course.entities.user;
 
+import com.luizvictor.course.entities.user.dto.UpdateRoleDto;
 import com.luizvictor.course.entities.user.dto.UserDto;
 import com.luizvictor.course.entities.user.dto.UserUpdateDto;
 import jakarta.persistence.*;
@@ -26,12 +27,19 @@ public class User implements UserDetails {
     private String email;
     private String phone;
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public User(UserDto dto) {
         this.name = dto.name();
         this.email = dto.email();
         this.phone = dto.phone();
         this.password = new BCryptPasswordEncoder().encode(dto.password());
+        this.role = Role.CUSTOMER;
+    }
+
+    public void changeRole(UpdateRoleDto dto) {
+        this.role = Role.valueOf(dto.role());
     }
 
     public void update(UserUpdateDto dto) {
@@ -42,21 +50,8 @@ public class User implements UserDetails {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
@@ -87,5 +82,18 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
