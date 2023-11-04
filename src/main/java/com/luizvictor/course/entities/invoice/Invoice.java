@@ -34,8 +34,8 @@ public class Invoice {
         this.invoiceStatus = InvoiceStatus.PAID;
     }
 
-    public void updateStatus(InvoiceStatus status) {
-        this.invoiceStatus = status;
+    public void updateStatus(String status) {
+        this.invoiceStatus = InvoiceStatus.valueOf(status.toUpperCase());
     }
 
     public void addItem(InvoiceItem item) {

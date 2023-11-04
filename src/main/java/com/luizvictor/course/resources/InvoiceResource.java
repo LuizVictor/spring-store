@@ -4,6 +4,7 @@ import com.luizvictor.course.entities.invoice.dto.InvoiceDetailDto;
 import com.luizvictor.course.entities.invoice.dto.InvoiceDto;
 import com.luizvictor.course.entities.invoice.dto.InvoiceStatusDto;
 import com.luizvictor.course.services.InvoiceService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -33,14 +34,14 @@ public class InvoiceResource {
     }
 
     @PostMapping
-    public ResponseEntity<InvoiceDetailDto> save(@RequestBody InvoiceDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<InvoiceDetailDto> save(@RequestBody @Valid InvoiceDto dto, UriComponentsBuilder uriBuilder) {
         InvoiceDetailDto invoice = invoiceService.save(dto);
         URI uri = uriBuilder.path("/users/{id}").buildAndExpand(invoice.id()).toUri();
         return ResponseEntity.created(uri).body(invoice);
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<InvoiceDetailDto> updateStatus(@PathVariable Long id, @RequestBody InvoiceStatusDto dto) {
+    public ResponseEntity<InvoiceDetailDto> updateStatus(@PathVariable Long id, @RequestBody @Valid InvoiceStatusDto dto) {
         InvoiceDetailDto invoice = invoiceService.updateStatus(id, dto);
         return ResponseEntity.ok().body(invoice);
     }

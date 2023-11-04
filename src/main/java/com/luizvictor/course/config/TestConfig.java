@@ -60,7 +60,7 @@ public class TestConfig implements CommandLineRunner {
         Invoice invoice2 = new Invoice(user2);
         Invoice invoice3 = new Invoice(user1);
 
-        invoice3.updateStatus(InvoiceStatus.CANCELED);
+        invoice3.updateStatus("canceled");
 
         InvoiceItem invoiceItem1 = new InvoiceItem(2, product3, invoice1);
         InvoiceItem invoiceItem2 = new InvoiceItem(1, product2, invoice1);

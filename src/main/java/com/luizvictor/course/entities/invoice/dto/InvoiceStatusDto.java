@@ -1,6 +1,7 @@
 package com.luizvictor.course.entities.invoice.dto;
 
-import com.luizvictor.course.entities.invoice.InvoiceStatus;
 
-public record InvoiceStatusDto(InvoiceStatus status) {
+import jakarta.validation.constraints.NotBlank;
+
+public record InvoiceStatusDto(@NotBlank String status) {
 }
