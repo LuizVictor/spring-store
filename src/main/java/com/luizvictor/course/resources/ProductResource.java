@@ -3,6 +3,7 @@ package com.luizvictor.course.resources;
 import com.luizvictor.course.entities.product.dto.ProductDetailDto;
 import com.luizvictor.course.entities.product.dto.ProductDto;
 import com.luizvictor.course.services.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -32,7 +33,7 @@ public class ProductResource {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDetailDto> save(@RequestBody ProductDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<ProductDetailDto> save(@RequestBody @Valid ProductDto dto, UriComponentsBuilder uriBuilder) {
         ProductDetailDto product = productService.save(dto);
         URI uri = uriBuilder.path("/products/{id}").buildAndExpand(product.id()).toUri();
         return ResponseEntity.created(uri).body(product);
