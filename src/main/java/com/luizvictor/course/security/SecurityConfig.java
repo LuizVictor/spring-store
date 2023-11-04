@@ -30,9 +30,15 @@ public class SecurityConfig {
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/**").authenticated()
+
                         .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/products").hasAnyRole("ADMIN", "MANAGER")
+
+                        .requestMatchers(HttpMethod.GET, "/invoices").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers(HttpMethod.GET, "/invoices/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/invoices").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers(HttpMethod.PATCH, "/invoices/**").hasAnyRole("ADMIN", "MANAGER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

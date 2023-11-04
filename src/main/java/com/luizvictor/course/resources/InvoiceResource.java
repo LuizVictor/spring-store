@@ -39,7 +39,7 @@ public class InvoiceResource {
         return ResponseEntity.created(uri).body(invoice);
     }
 
-    @PutMapping("{id}")
+    @PatchMapping("{id}")
     public ResponseEntity<InvoiceDetailDto> updateStatus(@PathVariable Long id, @RequestBody InvoiceStatusDto dto) {
         InvoiceDetailDto invoice = invoiceService.updateStatus(id, dto);
         return ResponseEntity.ok().body(invoice);

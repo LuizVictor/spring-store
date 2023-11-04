@@ -25,17 +25,18 @@ public class InvoiceService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final InvoiceItemRepository invoiceItemRepository;
+    private final AuthenticationService authService;
 
     public InvoiceService(
             InvoiceRepository invoiceRepository,
             UserRepository userRepository,
             ProductRepository productRepository,
-            InvoiceItemRepository orderItem
-    ) {
+            InvoiceItemRepository orderItem, AuthenticationService authService) {
         this.invoiceRepository = invoiceRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.invoiceItemRepository = orderItem;
+        this.authService = authService;
     }
 
     public List<InvoiceDetailDto> findAll() {
@@ -43,7 +44,9 @@ public class InvoiceService {
     }
 
     public InvoiceDetailDto findById(Long id) {
-        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new NotFoundException("Order not found!"));
+        Invoice invoice = invoiceRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Order not found!"));
+        authService.authUser(invoice.getUser().getId());
         return new InvoiceDetailDto(invoice);
     }
 
@@ -61,7 +64,7 @@ public class InvoiceService {
             Invoice invoice = invoiceRepository.getReferenceById(id);
             invoice.updateStatus(dto.status());
             return new InvoiceDetailDto(invoiceRepository.save(invoice));
-        }  catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             throw new NotFoundException("User not found");
         }
     }
