@@ -33,4 +33,17 @@ public class CustomExceptionHandler {
         );
         return ResponseEntity.status(status).body(standardException);
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<StandardException> unauthorizedException(UnauthorizedException exception, HttpServletRequest request) {
+        String error = "Unauthorized";
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        StandardException standardException = new StandardException(
+                status.value(),
+                error,
+                exception.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(status).body(standardException);
+    }
 }

@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.luizvictor.course.entities.user.User;
+import com.luizvictor.course.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm).withIssuer("Store spring").build().verify(token).getSubject();
         } catch (JWTVerificationException exception) {
-            throw new RuntimeException("Unauthorized access ", exception);
+            throw new UnauthorizedException("Unauthorized access");
         }
 
     }

@@ -2,7 +2,6 @@ package com.luizvictor.course.config;
 
 import com.luizvictor.course.entities.*;
 import com.luizvictor.course.entities.invoice.Invoice;
-import com.luizvictor.course.entities.invoice.InvoiceStatus;
 import com.luizvictor.course.entities.orderItem.InvoiceItem;
 import com.luizvictor.course.entities.product.Product;
 import com.luizvictor.course.entities.product.dto.ProductDto;
