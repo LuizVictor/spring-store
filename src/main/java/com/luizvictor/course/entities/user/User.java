@@ -2,7 +2,6 @@ package com.luizvictor.course.entities.user;
 
 import com.luizvictor.course.entities.user.dto.UpdateRoleDto;
 import com.luizvictor.course.entities.user.dto.UserDto;
-import com.luizvictor.course.entities.user.dto.UserUpdateDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +23,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(unique = true)
     private String email;
     private String phone;
     private String password;
@@ -39,10 +39,10 @@ public class User implements UserDetails {
     }
 
     public void changeRole(UpdateRoleDto dto) {
-        this.role = Role.valueOf(dto.role());
+        this.role = Role.valueOf(dto.role().toUpperCase());
     }
 
-    public void update(UserUpdateDto dto) {
+    public void update(UserDto dto) {
         this.name = dto.name();
         this.email = dto.email();
         this.phone = dto.phone();

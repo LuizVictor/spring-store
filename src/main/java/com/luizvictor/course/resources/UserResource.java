@@ -3,8 +3,8 @@ package com.luizvictor.course.resources;
 import com.luizvictor.course.entities.user.dto.UpdateRoleDto;
 import com.luizvictor.course.entities.user.dto.UserDetailDto;
 import com.luizvictor.course.entities.user.dto.UserDto;
-import com.luizvictor.course.entities.user.dto.UserUpdateDto;
 import com.luizvictor.course.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -34,20 +34,20 @@ public class UserResource {
     }
 
     @PostMapping
-    public ResponseEntity<UserDetailDto> create(@RequestBody UserDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<UserDetailDto> create(@RequestBody @Valid UserDto dto, UriComponentsBuilder uriBuilder) {
         UserDetailDto user = userService.save(dto);
         URI uri = uriBuilder.path("/users/{id}").buildAndExpand(user.id()).toUri();
         return ResponseEntity.created(uri).body(user);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserDetailDto> changeRole(@PathVariable Long id, @RequestBody UpdateRoleDto dto) {
+    public ResponseEntity<UserDetailDto> changeRole(@PathVariable Long id, @RequestBody @Valid UpdateRoleDto dto) {
         UserDetailDto user = userService.changeRole(id, dto);
         return ResponseEntity.ok().body(user);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDetailDto> update(@PathVariable Long id, @RequestBody UserUpdateDto dto) {
+    public ResponseEntity<UserDetailDto> update(@PathVariable Long id, @RequestBody @Valid UserDto dto) {
         UserDetailDto user = userService.update(id, dto);
         return ResponseEntity.ok().body(user);
     }

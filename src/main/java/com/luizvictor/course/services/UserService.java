@@ -4,7 +4,6 @@ import com.luizvictor.course.entities.user.User;
 import com.luizvictor.course.entities.user.dto.UpdateRoleDto;
 import com.luizvictor.course.entities.user.dto.UserDetailDto;
 import com.luizvictor.course.entities.user.dto.UserDto;
-import com.luizvictor.course.entities.user.dto.UserUpdateDto;
 import com.luizvictor.course.exceptions.DatabaseException;
 import com.luizvictor.course.exceptions.NotFoundException;
 import com.luizvictor.course.repositories.UserRepository;
@@ -49,7 +48,7 @@ public class UserService {
         }
     }
 
-    public UserDetailDto update(Long id, UserUpdateDto dto) {
+    public UserDetailDto update(Long id, UserDto dto) {
         try {
             authService.authUser(id);
             User user = userRepository.getReferenceById(id);

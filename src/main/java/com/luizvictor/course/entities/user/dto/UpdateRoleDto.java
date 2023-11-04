@@ -1,4 +1,6 @@
 package com.luizvictor.course.entities.user.dto;
 
-public record UpdateRoleDto(String role) {
+import jakarta.validation.constraints.NotBlank;
+
+public record UpdateRoleDto(@NotBlank String role) {
 }
