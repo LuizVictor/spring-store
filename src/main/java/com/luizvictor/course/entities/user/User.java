@@ -46,7 +46,7 @@ public class User implements UserDetails {
         this.name = dto.name();
         this.email = dto.email();
         this.phone = dto.phone();
-        this.password = dto.password();
+        this.password = new BCryptPasswordEncoder().encode(dto.password());
     }
 
     @Override
