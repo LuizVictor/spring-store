@@ -29,7 +29,7 @@ public class UserService {
 
     public UserDetailsDto findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-        authService.authorizedUser(id);
+        authService.authorizedUser(user.getEmail());
         return new UserDetailsDto(user);
     }
 
@@ -50,8 +50,8 @@ public class UserService {
 
     public UserDetailsDto update(Long id, UserDto dto) {
         try {
-            authService.authorizedUser(id);
             User user = userRepository.getReferenceById(id);
+            authService.authorizedUser(user.getEmail());
             user.update(dto);
             return new UserDetailsDto(userRepository.save(user));
         }  catch (EntityNotFoundException e) {
@@ -61,7 +61,8 @@ public class UserService {
 
     public void delete(Long id) {
         try {
-            authService.authorizedUser(id);
+            User user = userRepository.getReferenceById(id);
+            authService.authorizedUser(user.getEmail());
             userRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());

@@ -31,9 +31,8 @@ public class AuthenticationService implements UserDetailsService {
         return new UserDetailsAuth(user);
     }
 
-    public void authorizedUser(Long id) {
+    public void authorizedUser(String userEmail) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = userRepository.getReferenceById(id).getEmail();
         String authEmail = authEmail(auth);
         String authRole = authRole(auth);
 
