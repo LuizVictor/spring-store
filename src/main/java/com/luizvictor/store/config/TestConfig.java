@@ -1,8 +1,8 @@
 package com.luizvictor.store.config;
 
 import com.luizvictor.store.entities.*;
-import com.luizvictor.store.entities.invoice.Invoice;
-import com.luizvictor.store.entities.orderItem.InvoiceItem;
+import com.luizvictor.store.entities.order.Order;
+import com.luizvictor.store.entities.orderItem.OrderItem;
 import com.luizvictor.store.entities.product.Product;
 import com.luizvictor.store.entities.product.dto.ProductDto;
 import com.luizvictor.store.entities.user.User;
@@ -23,13 +23,13 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private InvoiceRepository invoiceRepository;
+    private OrderRepository orderRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private InvoiceItemRepository invoiceItemRepository;
+    private OrderItemRepository orderItemRepository;
 
     private User createUser(String name, String email, String phone, String password) {
         UserDto userDto = new UserDto(name, email, phone, password);
@@ -55,22 +55,22 @@ public class TestConfig implements CommandLineRunner {
         Product product2 = createProduct("Iphone", "apple smartphone", "800", category3);
         Product product3 = createProduct("The man in the high castle", "dystopic book", "30", category2);
 
-        Invoice invoice1 = new Invoice(user1);
-        Invoice invoice2 = new Invoice(user2);
-        Invoice invoice3 = new Invoice(user1);
+        Order order1 = new Order(user1);
+        Order order2 = new Order(user2);
+        Order order3 = new Order(user1);
 
-        invoice3.updateStatus("canceled");
+        order3.updateStatus("canceled");
 
-        InvoiceItem invoiceItem1 = new InvoiceItem(2, product3, invoice1);
-        InvoiceItem invoiceItem2 = new InvoiceItem(1, product2, invoice1);
+        OrderItem orderItem1 = new OrderItem(2, product3, order1);
+        OrderItem orderItem2 = new OrderItem(1, product2, order1);
 
-        invoice1.addItem(invoiceItem1);
-        invoice2.addItem(invoiceItem2);
+        order1.addItem(orderItem1);
+        order2.addItem(orderItem2);
 
         userRepository.saveAll(Arrays.asList(user1, user2));
         categoryRepository.saveAll(Arrays.asList(category1, category2, category3));
         productRepository.saveAll(Arrays.asList(product1, product2, product3));
-        invoiceRepository.saveAll(Arrays.asList(invoice1, invoice2, invoice3));
-        invoiceItemRepository.saveAll(Arrays.asList(invoiceItem1, invoiceItem2));
+        orderRepository.saveAll(Arrays.asList(order1, order2, order3));
+        orderItemRepository.saveAll(Arrays.asList(orderItem1, orderItem2));
     }
 }

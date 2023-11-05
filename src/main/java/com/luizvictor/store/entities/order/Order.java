@@ -1,6 +1,6 @@
-package com.luizvictor.store.entities.invoice;
+package com.luizvictor.store.entities.order;
 
-import com.luizvictor.store.entities.orderItem.InvoiceItem;
+import com.luizvictor.store.entities.orderItem.OrderItem;
 import com.luizvictor.store.entities.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,7 +16,7 @@ import java.util.Objects;
 @Table(name = "orders")
 @NoArgsConstructor
 @Getter
-public class Invoice {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,35 +24,35 @@ public class Invoice {
     @JoinColumn(name = "user_id")
     private User user;
     @Enumerated(value = EnumType.STRING)
-    private InvoiceStatus invoiceStatus;
-    @OneToMany(mappedBy = "invoice")
-    private List<InvoiceItem> itens = new ArrayList<>();
+    private OrderStatus orderStatus;
+    @OneToMany(mappedBy = "order")
+    private List<OrderItem> itens = new ArrayList<>();
     private final LocalDateTime createdAt = LocalDateTime.now();
 
-    public Invoice(User user) {
+    public Order(User user) {
         this.user = user;
-        this.invoiceStatus = InvoiceStatus.PAID;
+        this.orderStatus = OrderStatus.PAID;
     }
 
     public void updateStatus(String status) {
-        this.invoiceStatus = InvoiceStatus.valueOf(status.toUpperCase());
+        this.orderStatus = OrderStatus.valueOf(status.toUpperCase());
     }
 
-    public void addItem(InvoiceItem item) {
-        item.setInvoice(this);
+    public void addItem(OrderItem item) {
+        item.setOrder(this);
         this.itens.add(item);
     }
 
     public BigDecimal getTotal() {
-        return itens.stream().map(InvoiceItem::getSubTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return itens.stream().map(OrderItem::getSubTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Invoice invoice = (Invoice) o;
-        return Objects.equals(id, invoice.id);
+        Order order = (Order) o;
+        return Objects.equals(id, order.id);
     }
 
     @Override

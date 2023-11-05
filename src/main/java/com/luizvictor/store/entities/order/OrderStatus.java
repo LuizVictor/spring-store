@@ -1,6 +1,6 @@
-package com.luizvictor.store.entities.invoice;
+package com.luizvictor.store.entities.order;
 
-public enum InvoiceStatus {
+public enum OrderStatus {
     WAITING_PAYMENT,
     PAID,
     SHIPPED,
