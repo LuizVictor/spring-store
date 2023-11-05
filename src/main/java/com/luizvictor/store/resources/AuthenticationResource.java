@@ -4,6 +4,7 @@ import com.luizvictor.store.entities.user.dto.UserLoginDetailsDto;
 import com.luizvictor.store.entities.user.dto.UserLoginDto;
 import com.luizvictor.store.security.TokenService;
 import com.luizvictor.store.security.UserDetailsAuth;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/login")
+@Tag(name = "Auth")
 public class AuthenticationResource {
     private final AuthenticationManager manager;
     private final TokenService tokenService;

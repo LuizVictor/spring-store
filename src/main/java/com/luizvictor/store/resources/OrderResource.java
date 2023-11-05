@@ -4,6 +4,8 @@ import com.luizvictor.store.entities.order.dto.OrderDetailsDto;
 import com.luizvictor.store.entities.order.dto.OrderDto;
 import com.luizvictor.store.entities.order.dto.OrderStatusDto;
 import com.luizvictor.store.services.OrderService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/orders")
+@SecurityRequirement(name = "bearer-key")
+@Tag(name = "Orders")
 public class OrderResource {
     private final OrderService orderService;
 

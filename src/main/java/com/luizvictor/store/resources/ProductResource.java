@@ -3,6 +3,8 @@ package com.luizvictor.store.resources;
 import com.luizvictor.store.entities.product.dto.ProductDetailsDto;
 import com.luizvictor.store.entities.product.dto.ProductDto;
 import com.luizvictor.store.services.ProductService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/products")
+@SecurityRequirement(name = "bearer-key")
+@Tag(name = "Products")
 public class ProductResource {
     private final ProductService productService;
 
