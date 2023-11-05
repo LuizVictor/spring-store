@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.luizvictor.store.entities.user.User;
 import com.luizvictor.store.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,13 +17,13 @@ public class TokenService {
     @Value("${security.token.secret}")
     private String secret;
 
-    public String create(User user) {
+    public String create(UserDetailsAuth user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT
                     .create()
                     .withIssuer("Store spring")
-                    .withSubject(user.getEmail())
+                    .withSubject(user.getUsername())
                     .withExpiresAt(expirationDate())
                     .sign(algorithm);
         } catch (JWTCreationException exception) {

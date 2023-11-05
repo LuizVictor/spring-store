@@ -1,9 +1,9 @@
 package com.luizvictor.store.resources;
 
-import com.luizvictor.store.entities.user.User;
 import com.luizvictor.store.entities.user.dto.UserLoginDetailsDto;
 import com.luizvictor.store.entities.user.dto.UserLoginDto;
 import com.luizvictor.store.security.TokenService;
+import com.luizvictor.store.security.UserDetailsAuth;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +29,7 @@ public class AuthenticationResource {
     public ResponseEntity<UserLoginDetailsDto> login(@RequestBody @Valid UserLoginDto dto) {
         var token = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
         Authentication auth = manager.authenticate(token);
-        String tokenJWT = tokenService.create((User) auth.getPrincipal());
+        String tokenJWT = tokenService.create((UserDetailsAuth) auth.getPrincipal());
         return ResponseEntity.ok().body(new UserLoginDetailsDto(tokenJWT));
     }
 }

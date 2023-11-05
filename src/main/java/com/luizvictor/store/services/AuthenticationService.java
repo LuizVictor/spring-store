@@ -3,6 +3,7 @@ package com.luizvictor.store.services;
 import com.luizvictor.store.entities.user.User;
 import com.luizvictor.store.exceptions.UnauthorizedException;
 import com.luizvictor.store.repositories.UserRepository;
+import com.luizvictor.store.security.UserDetailsAuth;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +23,12 @@ public class AuthenticationService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email);
+        return userDetails(email);
+    }
+
+    public UserDetails userDetails(String email) {
+        User user = userRepository.findByEmail(email);
+        return new UserDetailsAuth(user);
     }
 
     public void authorizedUser(Long id) {
@@ -37,8 +43,8 @@ public class AuthenticationService implements UserDetailsService {
     }
 
     private String authEmail(Authentication auth) {
-        User user = (User) auth.getPrincipal();
-        return user.getEmail();
+        UserDetailsAuth user = (UserDetailsAuth) auth.getPrincipal();
+        return user.getUsername();
     }
 
     private String authRole(Authentication auth) {

@@ -1,6 +1,6 @@
 package com.luizvictor.store.security;
 
-import com.luizvictor.store.repositories.UserRepository;
+import com.luizvictor.store.services.AuthenticationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,24 +17,21 @@ import java.io.IOException;
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
-    private final UserRepository userRepository;
+    private final AuthenticationService authService;
 
-    public SecurityFilter(TokenService tokenService, UserRepository userRepository) {
+    public SecurityFilter(TokenService tokenService, AuthenticationService authService) {
         this.tokenService = tokenService;
-        this.userRepository = userRepository;
+        this.authService = authService;
     }
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         String token = getToken(request);
 
         if (token != null) {
             String subject = tokenService.verify(token);
-            UserDetails user = userRepository.findByEmail(subject);
+            UserDetails user = authService.userDetails(subject);
             Authentication auth = new UsernamePasswordAuthenticationToken(
                     user,
                     null,
