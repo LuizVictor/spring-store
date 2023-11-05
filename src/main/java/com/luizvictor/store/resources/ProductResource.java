@@ -1,6 +1,6 @@
 package com.luizvictor.store.resources;
 
-import com.luizvictor.store.entities.product.dto.ProductDetailDto;
+import com.luizvictor.store.entities.product.dto.ProductDetailsDto;
 import com.luizvictor.store.entities.product.dto.ProductDto;
 import com.luizvictor.store.services.ProductService;
 import jakarta.validation.Valid;
@@ -21,20 +21,20 @@ public class ProductResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDetailDto>> findAll() {
-        List<ProductDetailDto> products = productService.findAll();
+    public ResponseEntity<List<ProductDetailsDto>> findAll() {
+        List<ProductDetailsDto> products = productService.findAll();
         return ResponseEntity.ok().body(products);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ProductDetailDto> findById(@PathVariable Long id) {
-        ProductDetailDto product = productService.findById(id);
+    public ResponseEntity<ProductDetailsDto> findById(@PathVariable Long id) {
+        ProductDetailsDto product = productService.findById(id);
         return ResponseEntity.ok().body(product);
     }
 
     @PostMapping
-    public ResponseEntity<ProductDetailDto> save(@RequestBody @Valid ProductDto dto, UriComponentsBuilder uriBuilder) {
-        ProductDetailDto product = productService.save(dto);
+    public ResponseEntity<ProductDetailsDto> save(@RequestBody @Valid ProductDto dto, UriComponentsBuilder uriBuilder) {
+        ProductDetailsDto product = productService.save(dto);
         URI uri = uriBuilder.path("/products/{id}").buildAndExpand(product.id()).toUri();
         return ResponseEntity.created(uri).body(product);
     }

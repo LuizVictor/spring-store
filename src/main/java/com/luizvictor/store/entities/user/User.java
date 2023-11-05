@@ -1,6 +1,6 @@
 package com.luizvictor.store.entities.user;
 
-import com.luizvictor.store.entities.user.dto.UpdateRoleDto;
+import com.luizvictor.store.entities.user.dto.UpdateUserRoleDto;
 import com.luizvictor.store.entities.user.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -38,7 +38,7 @@ public class User implements UserDetails {
         this.role = Role.CUSTOMER;
     }
 
-    public void changeRole(UpdateRoleDto dto) {
+    public void changeRole(UpdateUserRoleDto dto) {
         this.role = Role.valueOf(dto.role().toUpperCase());
     }
 

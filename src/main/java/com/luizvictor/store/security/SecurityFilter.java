@@ -25,13 +25,21 @@ public class SecurityFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
         String token = getToken(request);
 
         if (token != null) {
-            String subject = tokenService.getSubject(token);
+            String subject = tokenService.verify(token);
             UserDetails user = userRepository.findByEmail(subject);
-            Authentication auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            Authentication auth = new UsernamePasswordAuthenticationToken(
+                    user,
+                    null,
+                    user.getAuthorities()
+            );
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
 

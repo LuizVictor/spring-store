@@ -2,7 +2,7 @@ package com.luizvictor.store.services;
 
 import com.luizvictor.store.entities.Category;
 import com.luizvictor.store.entities.product.Product;
-import com.luizvictor.store.entities.product.dto.ProductDetailDto;
+import com.luizvictor.store.entities.product.dto.ProductDetailsDto;
 import com.luizvictor.store.entities.product.dto.ProductDto;
 import com.luizvictor.store.exceptions.NotFoundException;
 import com.luizvictor.store.repositories.CategoryRepository;
@@ -21,18 +21,18 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<ProductDetailDto> findAll() {
-        return productRepository.findAll().stream().map(ProductDetailDto::new).toList();
+    public List<ProductDetailsDto> findAll() {
+        return productRepository.findAll().stream().map(ProductDetailsDto::new).toList();
     }
 
-    public ProductDetailDto findById(Long id) {
+    public ProductDetailsDto findById(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product not found!"));
-        return new ProductDetailDto(product);
+        return new ProductDetailsDto(product);
     }
 
-    public ProductDetailDto save(ProductDto dto) {
+    public ProductDetailsDto save(ProductDto dto) {
         Category category = categoryRepository.getReferenceById(dto.category());
         Product product = new Product(dto, category);
-        return new ProductDetailDto(productRepository.save(product));
+        return new ProductDetailsDto(productRepository.save(product));
     }
 }

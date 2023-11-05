@@ -1,7 +1,7 @@
 package com.luizvictor.store.services;
 
 import com.luizvictor.store.entities.order.Order;
-import com.luizvictor.store.entities.order.dto.OrderDetailDto;
+import com.luizvictor.store.entities.order.dto.OrderDetailsDto;
 import com.luizvictor.store.entities.order.dto.OrderDto;
 import com.luizvictor.store.entities.order.dto.OrderStatusDto;
 import com.luizvictor.store.entities.orderItem.OrderItem;
@@ -39,33 +39,33 @@ public class OrderService {
         this.authService = authService;
     }
 
-    public List<OrderDetailDto> findAll() {
-        return orderRepository.findAll().stream().map(OrderDetailDto::new).toList();
+    public List<OrderDetailsDto> findAll() {
+        return orderRepository.findAll().stream().map(OrderDetailsDto::new).toList();
     }
 
-    public OrderDetailDto findById(Long id) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Order not found!"));
-        authService.authUser(order.getUser().getId());
-        return new OrderDetailDto(order);
+    public OrderDetailsDto findById(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Order not found!"));
+        authService.authorizedUser(order.getUser().getId());
+        return new OrderDetailsDto(order);
     }
 
-    public OrderDetailDto save(OrderDto dto) {
+    public OrderDetailsDto save(OrderDto dto) {
         User user = userRepository.getReferenceById(dto.userId());
+        authService.authorizedUser(dto.userId());
         Order order = orderRepository.save(new Order(user));
         List<OrderItem> items = saveItems(dto.items(), order);
         orderItemRepository.saveAll(items);
 
-        return new OrderDetailDto(order);
+        return new OrderDetailsDto(order);
     }
 
-    public OrderDetailDto updateStatus(Long id, OrderStatusDto dto) {
+    public OrderDetailsDto updateStatus(Long id, OrderStatusDto dto) {
         try {
             Order order = orderRepository.getReferenceById(id);
             order.updateStatus(dto.status());
-            return new OrderDetailDto(orderRepository.save(order));
+            return new OrderDetailsDto(orderRepository.save(order));
         } catch (EntityNotFoundException e) {
-            throw new NotFoundException("User not found");
+            throw new NotFoundException("Order not found");
         }
     }
 

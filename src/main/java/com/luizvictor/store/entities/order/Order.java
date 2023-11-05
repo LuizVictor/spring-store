@@ -39,12 +39,12 @@ public class Order {
     }
 
     public void addItem(OrderItem item) {
-        item.setOrder(this);
+        item.includeOrder(this);
         this.itens.add(item);
     }
 
-    public BigDecimal getTotal() {
-        return itens.stream().map(OrderItem::getSubTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+    public BigDecimal total() {
+        return itens.stream().map(OrderItem::subTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override

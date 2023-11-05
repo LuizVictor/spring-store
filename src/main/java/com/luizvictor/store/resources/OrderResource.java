@@ -1,6 +1,6 @@
 package com.luizvictor.store.resources;
 
-import com.luizvictor.store.entities.order.dto.OrderDetailDto;
+import com.luizvictor.store.entities.order.dto.OrderDetailsDto;
 import com.luizvictor.store.entities.order.dto.OrderDto;
 import com.luizvictor.store.entities.order.dto.OrderStatusDto;
 import com.luizvictor.store.services.OrderService;
@@ -22,27 +22,27 @@ public class OrderResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderDetailDto>> findAll() {
-        List<OrderDetailDto> invoices = orderService.findAll();
-        return ResponseEntity.ok().body(invoices);
+    public ResponseEntity<List<OrderDetailsDto>> findAll() {
+        List<OrderDetailsDto> orders = orderService.findAll();
+        return ResponseEntity.ok().body(orders);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<OrderDetailDto> findById(@PathVariable Long id) {
-        OrderDetailDto invoice = orderService.findById(id);
-        return ResponseEntity.ok().body(invoice);
+    public ResponseEntity<OrderDetailsDto> findById(@PathVariable Long id) {
+        OrderDetailsDto orders = orderService.findById(id);
+        return ResponseEntity.ok().body(orders);
     }
 
     @PostMapping
-    public ResponseEntity<OrderDetailDto> save(@RequestBody @Valid OrderDto dto, UriComponentsBuilder uriBuilder) {
-        OrderDetailDto invoice = orderService.save(dto);
-        URI uri = uriBuilder.path("/users/{id}").buildAndExpand(invoice.id()).toUri();
-        return ResponseEntity.created(uri).body(invoice);
+    public ResponseEntity<OrderDetailsDto> save(@RequestBody @Valid OrderDto dto, UriComponentsBuilder uriBuilder) {
+        OrderDetailsDto orders = orderService.save(dto);
+        URI uri = uriBuilder.path("/users/{id}").buildAndExpand(orders.id()).toUri();
+        return ResponseEntity.created(uri).body(orders);
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<OrderDetailDto> updateStatus(@PathVariable Long id, @RequestBody @Valid OrderStatusDto dto) {
-        OrderDetailDto invoice = orderService.updateStatus(id, dto);
-        return ResponseEntity.ok().body(invoice);
+    public ResponseEntity<OrderDetailsDto> updateStatus(@PathVariable Long id, @RequestBody @Valid OrderStatusDto dto) {
+        OrderDetailsDto orders = orderService.updateStatus(id, dto);
+        return ResponseEntity.ok().body(orders);
     }
 }

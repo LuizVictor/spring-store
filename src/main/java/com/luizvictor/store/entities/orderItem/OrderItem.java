@@ -1,6 +1,5 @@
 package com.luizvictor.store.entities.orderItem;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.luizvictor.store.entities.order.Order;
 import com.luizvictor.store.entities.product.Product;
 import jakarta.persistence.*;
@@ -23,7 +22,6 @@ public class OrderItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
@@ -35,11 +33,11 @@ public class OrderItem {
         this.order = order;
     }
 
-    public BigDecimal getSubTotal() {
+    public BigDecimal subTotal() {
         return price.multiply(BigDecimal.valueOf(quantity));
     }
 
-    public void setOrder(Order order) {
+    public void includeOrder(Order order) {
         this.order = order;
     }
 

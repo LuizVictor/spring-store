@@ -1,8 +1,8 @@
 package com.luizvictor.store.services;
 
 import com.luizvictor.store.entities.user.User;
-import com.luizvictor.store.entities.user.dto.UpdateRoleDto;
-import com.luizvictor.store.entities.user.dto.UserDetailDto;
+import com.luizvictor.store.entities.user.dto.UpdateUserRoleDto;
+import com.luizvictor.store.entities.user.dto.UserDetailsDto;
 import com.luizvictor.store.entities.user.dto.UserDto;
 import com.luizvictor.store.exceptions.DatabaseException;
 import com.luizvictor.store.exceptions.NotFoundException;
@@ -23,37 +23,37 @@ public class UserService {
         this.authService = authService;
     }
 
-    public List<UserDetailDto> findAll() {
-        return userRepository.findAll().stream().map(UserDetailDto::new).toList();
+    public List<UserDetailsDto> findAll() {
+        return userRepository.findAll().stream().map(UserDetailsDto::new).toList();
     }
 
-    public UserDetailDto findById(Long id) {
+    public UserDetailsDto findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-        authService.authUser(id);
-        return new UserDetailDto(user);
+        authService.authorizedUser(id);
+        return new UserDetailsDto(user);
     }
 
-    public UserDetailDto save(UserDto dto) {
+    public UserDetailsDto save(UserDto dto) {
         User user = new User(dto);
-        return new UserDetailDto(userRepository.save(user));
+        return new UserDetailsDto(userRepository.save(user));
     }
 
-    public UserDetailDto changeRole(Long id, UpdateRoleDto dto) {
+    public UserDetailsDto changeRole(Long id, UpdateUserRoleDto dto) {
         try {
             User user = userRepository.getReferenceById(id);
             user.changeRole(dto);
-            return new UserDetailDto(userRepository.save(user));
+            return new UserDetailsDto(userRepository.save(user));
         } catch (EntityNotFoundException e) {
             throw new NotFoundException("User not found");
         }
     }
 
-    public UserDetailDto update(Long id, UserDto dto) {
+    public UserDetailsDto update(Long id, UserDto dto) {
         try {
-            authService.authUser(id);
+            authService.authorizedUser(id);
             User user = userRepository.getReferenceById(id);
             user.update(dto);
-            return new UserDetailDto(userRepository.save(user));
+            return new UserDetailsDto(userRepository.save(user));
         }  catch (EntityNotFoundException e) {
             throw new NotFoundException("User not found");
         }
@@ -61,7 +61,7 @@ public class UserService {
 
     public void delete(Long id) {
         try {
-            authService.authUser(id);
+            authService.authorizedUser(id);
             userRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());

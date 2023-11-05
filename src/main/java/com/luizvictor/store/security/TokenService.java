@@ -18,7 +18,7 @@ public class TokenService {
     @Value("${security.token.secret}")
     private String secret;
 
-    public String generate(User user) {
+    public String create(User user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT
@@ -32,14 +32,13 @@ public class TokenService {
         }
     }
 
-    public String getSubject(String token) {
+    public String verify(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm).withIssuer("Store spring").build().verify(token).getSubject();
         } catch (JWTVerificationException exception) {
             throw new UnauthorizedException("Unauthorized access");
         }
-
     }
 
     private Instant expirationDate() {
