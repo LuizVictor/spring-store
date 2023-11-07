@@ -7,6 +7,7 @@ import com.luizvictor.store.exceptions.InvalidPasswordException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 class UserTest {
     @Test
@@ -15,8 +16,11 @@ class UserTest {
         UserDto userDto = new UserDto("John Doe", "john@email.com", "1111", "123456");
         User user = new User(userDto);
 
+        boolean encryptedPassword = new BCryptPasswordEncoder().matches("123456", user.getPassword());
+
         Assertions.assertEquals("John Doe", user.getName());
         Assertions.assertEquals("john@email.com", user.getEmail());
+        Assertions.assertTrue(encryptedPassword);
         Assertions.assertEquals("CUSTOMER", user.getRole().name());
     }
 
@@ -70,8 +74,11 @@ class UserTest {
         UserDto updateDto = new UserDto("Joanna Doe", "joanna@email.com", "2222", "654321");
         user.update(updateDto);
 
+        boolean encryptedPassword = new BCryptPasswordEncoder().matches("654321", user.getPassword());
+
         Assertions.assertEquals("Joanna Doe", user.getName());
         Assertions.assertEquals("joanna@email.com", user.getEmail());
+        Assertions.assertTrue(encryptedPassword);
         Assertions.assertEquals("CUSTOMER", user.getRole().name());
     }
 

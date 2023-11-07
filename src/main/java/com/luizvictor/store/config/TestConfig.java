@@ -43,8 +43,8 @@ public class TestConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        User user1 = createUser("John Doe", "john@email.com", "111-111", "123");
-        User user2 = createUser("Joanna Doe", "joanna@email.com", "111-222", "321");
+        User user1 = createUser("John Doe", "john@email.com", "111-111", "123456");
+        User user2 = createUser("Joanna Doe", "joanna@email.com", "111-222", "654321");
         user1.changeRole(new UpdateUserRoleDto("ADMIN"));
 
         Category category1 = new Category("Computers");

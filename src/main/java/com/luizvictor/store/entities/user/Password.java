@@ -1,9 +1,14 @@
 package com.luizvictor.store.entities.user;
 
 import com.luizvictor.store.exceptions.InvalidPasswordException;
+import jakarta.persistence.Embeddable;
+import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.regex.Pattern;
 
+@Embeddable
+@NoArgsConstructor
 public class Password {
     private String password;
 
@@ -19,7 +24,7 @@ public class Password {
             throw new InvalidPasswordException("Password must be longer than 6 characters");
         }
 
-        this.password = password;
+        this.password = new BCryptPasswordEncoder().encode(password);
     }
 
     @Override

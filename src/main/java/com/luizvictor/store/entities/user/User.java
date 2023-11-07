@@ -5,7 +5,6 @@ import com.luizvictor.store.entities.user.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Table(name = "users")
@@ -17,8 +16,7 @@ public class User {
     private Long id;
     private String name;
     @Column(unique = true)
-    @Embedded
-    private Email email;
+    private String email;
     private String phone;
     private String password;
     @Enumerated(EnumType.STRING)
@@ -26,18 +24,20 @@ public class User {
 
     public User(UserDto dto) {
         this.name = dto.name();
-        this.email = new Email(dto.email());
+        this.email = createEmail(dto.email());
         this.phone = dto.phone();
-        this.password = createPasswordEncrypted(dto.password());
+        this.password = createPassword(dto.password());
         this.role = Role.CUSTOMER;
     }
 
-    private String createPasswordEncrypted(String password) {
-        return new BCryptPasswordEncoder().encode(new Password(password).toString());
+    private String createEmail(String email) {
+        Email email1 = new Email(email);
+        return email1.toString();
     }
 
-    public String getEmail() {
-        return email.toString();
+    private String createPassword(String password) {
+        Password password1 = new Password(password);
+        return password1.toString();
     }
 
     public void changeRole(UpdateUserRoleDto dto) {
@@ -46,8 +46,8 @@ public class User {
 
     public void update(UserDto dto) {
         this.name = dto.name();
-        this.email = new Email(dto.email());
+        this.email = createEmail(dto.email());
         this.phone = dto.phone();
-        this.password = createPasswordEncrypted(dto.password());
+        this.password = createPassword(dto.password());
     }
 }
