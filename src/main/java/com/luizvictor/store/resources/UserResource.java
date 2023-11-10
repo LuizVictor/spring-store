@@ -48,7 +48,7 @@ public class UserResource {
     @PatchMapping("/{id}")
     @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<UserDetailsDto> changeRole(@PathVariable Long id, @RequestBody @Valid UpdateUserRoleDto dto) {
-        UserDetailsDto user = userService.changeRole(id, dto);
+        UserDetailsDto user = userService.changeRole(id, dto.role());
         return ResponseEntity.ok().body(user);
     }
 

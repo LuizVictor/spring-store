@@ -1,6 +1,5 @@
 package com.luizvictor.store.entities.user;
 
-import com.luizvictor.store.entities.user.dto.UpdateUserRoleDto;
 import com.luizvictor.store.entities.user.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -40,8 +39,8 @@ public class User {
         return password1.toString();
     }
 
-    public void changeRole(UpdateUserRoleDto dto) {
-        this.role = Role.valueOf(dto.role().toUpperCase());
+    public void changeRole(String role) {
+        this.role = Role.valueOf(role.toUpperCase());
     }
 
     public void update(UserDto dto) {
