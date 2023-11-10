@@ -42,7 +42,7 @@ public class UserService {
             User user = userRepository.getReferenceById(id);
             user.changeRole(role);
             return new UserDetailsDto(userRepository.save(user));
-        } catch (EntityNotFoundException e) {
+        } catch (NullPointerException e) {
             throw new NotFoundException("User not found");
         }
     }
