@@ -1,9 +1,10 @@
 package com.luizvictor.store.entities.product;
 
 import com.luizvictor.store.entities.Category;
-import com.luizvictor.store.entities.product.dto.ProductDto;
 import com.luizvictor.store.exceptions.EmptyNameException;
 import com.luizvictor.store.exceptions.InvalidPriceException;
+
+import static com.luizvictor.store.common.ProductConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,9 +15,8 @@ class ProductTest {
     @Test
     @DisplayName(value = "Must create product")
     void mustCreateProduct() {
-        ProductDto dto = new ProductDto("Product", "test product", new BigDecimal(100), 1L);
         Category category = new Category("Category");
-        Product product = new Product(dto, category);
+        Product product = new Product(PRODUCT, category);
 
         assertEquals("Product", product.getName());
         assertEquals("test product", product.getDescription());
@@ -27,9 +27,8 @@ class ProductTest {
     @DisplayName(value = "Must not create product with empty name")
     void mustNotCreateProductWithEmptyName() {
         Exception exception = assertThrows(EmptyNameException.class, () -> {
-            ProductDto dto = new ProductDto("", "test product", new BigDecimal(100), 1L);
             Category category = new Category("Category");
-            new Product(dto, category);
+            new Product(INVALID_NAME_PRODUCT, category);
         });
 
         String expected = "Product name must not be blank";
@@ -42,9 +41,8 @@ class ProductTest {
     @DisplayName(value = "Must not create product with price equals 0")
     void mustNotCreateProductWithPriceEqualsZero() {
         Exception exception = assertThrows(InvalidPriceException.class, () -> {
-            ProductDto dto = new ProductDto("Product", "test product", BigDecimal.ZERO, 1L);
             Category category = new Category("Category");
-            new Product(dto, category);
+            new Product(INVALID_PRICE_ZERO_PRODUCT, category);
         });
 
         String expected = "The price must be greater than 0";
@@ -57,9 +55,8 @@ class ProductTest {
     @DisplayName(value = "Must not create product with negative price")
     void mustNotCreateProductWithPriceEqualsZeroNegativePrice() {
         Exception exception = assertThrows(InvalidPriceException.class, () -> {
-            ProductDto dto = new ProductDto("Product", "test product", new BigDecimal(-100), 1L);
             Category category = new Category("Category");
-            new Product(dto, category);
+            new Product(INVALID_PRICE_NEGATIVE_PRODUCT, category);
         });
 
         String expected = "The price must be greater than 0";
