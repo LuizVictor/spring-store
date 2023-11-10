@@ -1,6 +1,5 @@
 package com.luizvictor.store.entities.user;
 
-import com.luizvictor.store.entities.user.dto.UpdateUserRoleDto;
 import com.luizvictor.store.entities.user.dto.UserDto;
 import com.luizvictor.store.exceptions.InvalidEmailException;
 import com.luizvictor.store.exceptions.InvalidPasswordException;
@@ -58,9 +57,7 @@ class UserTest {
         UserDto userDto = new UserDto("John Doe", "john@email.com", "1111", "123456");
         User user = new User(userDto);
 
-        UpdateUserRoleDto userRoleDto = new UpdateUserRoleDto("admin");
-
-        user.changeRole(userRoleDto);
+        user.changeRole("admin");
 
         Assertions.assertEquals("ADMIN", user.getRole().name());
     }
