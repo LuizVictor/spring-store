@@ -26,9 +26,7 @@ class UserTest {
     @Test
     @DisplayName(value = "Must not create user with invalid email")
     void mustNotCreateUserWithInvalidEmail() {
-        Exception exception = assertThrows(InvalidEmailException.class, () -> {
-            new User(INVALID_EMAIL);
-        });
+        Exception exception = assertThrows(InvalidEmailException.class, () -> new User(INVALID_EMAIL));
 
         String expected = "Invalid email";
         String actual = exception.getMessage();
@@ -39,9 +37,7 @@ class UserTest {
     @Test
     @DisplayName(value = "Must not create user with password shorter than 6 characters")
     void mustNotCreateUserWithPasswordShorterThan6Characters() {
-        Exception exception = assertThrows(InvalidPasswordException.class, () -> {
-            new User(INVALID_PASSWORD);
-        });
+        Exception exception = assertThrows(InvalidPasswordException.class, () -> new User(INVALID_PASSWORD));
 
         String expected = "Password must be longer than 6 characters";
         String actual = exception.getMessage();
