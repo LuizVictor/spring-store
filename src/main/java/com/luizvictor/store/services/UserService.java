@@ -6,7 +6,6 @@ import com.luizvictor.store.entities.user.dto.UserDto;
 import com.luizvictor.store.exceptions.DatabaseException;
 import com.luizvictor.store.exceptions.NotFoundException;
 import com.luizvictor.store.repositories.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +52,7 @@ public class UserService {
             authService.authorizedUser(user.getEmail());
             user.update(dto);
             return new UserDetailsDto(userRepository.save(user));
-        }  catch (EntityNotFoundException e) {
+        }  catch (NullPointerException e) {
             throw new NotFoundException("User not found");
         }
     }

@@ -3,7 +3,6 @@ package com.luizvictor.store.services;
 import com.luizvictor.store.entities.order.Order;
 import com.luizvictor.store.entities.order.dto.OrderDetailsDto;
 import com.luizvictor.store.entities.order.dto.OrderDto;
-import com.luizvictor.store.entities.order.dto.OrderStatusDto;
 import com.luizvictor.store.entities.orderItem.OrderItem;
 import com.luizvictor.store.entities.orderItem.OrderItemDto;
 import com.luizvictor.store.entities.product.Product;
@@ -13,7 +12,6 @@ import com.luizvictor.store.repositories.OrderItemRepository;
 import com.luizvictor.store.repositories.OrderRepository;
 import com.luizvictor.store.repositories.ProductRepository;
 import com.luizvictor.store.repositories.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -59,12 +57,12 @@ public class OrderService {
         return new OrderDetailsDto(order);
     }
 
-    public OrderDetailsDto updateStatus(Long id, OrderStatusDto dto) {
+    public OrderDetailsDto updateStatus(Long id, String status) {
         try {
             Order order = orderRepository.getReferenceById(id);
-            order.updateStatus(dto.status());
+            order.updateStatus(status);
             return new OrderDetailsDto(orderRepository.save(order));
-        } catch (EntityNotFoundException e) {
+        } catch (NullPointerException e) {
             throw new NotFoundException("Order not found");
         }
     }

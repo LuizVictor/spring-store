@@ -46,7 +46,7 @@ public class OrderResource {
 
     @PatchMapping("{id}")
     public ResponseEntity<OrderDetailsDto> updateStatus(@PathVariable Long id, @RequestBody @Valid OrderStatusDto dto) {
-        OrderDetailsDto orders = orderService.updateStatus(id, dto);
+        OrderDetailsDto orders = orderService.updateStatus(id, dto.status());
         return ResponseEntity.ok().body(orders);
     }
 }
