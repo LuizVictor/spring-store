@@ -26,33 +26,29 @@ import static org.mockito.Mockito.*;
 class UserServiceTest {
     @InjectMocks
     private UserService userService;
-
     @Mock
     private UserRepository userRepository;
-
     @Mock
     private AuthenticationService authService;
 
     @Test
-    @DisplayName(value = "Must save user")
+    @DisplayName(value = "Must save valid user")
     void save_validUser_mustReturnUserDetailsDto() {
         User user = new User(USER);
 
-        when(userRepository.save(any())).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenReturn(user);
 
         UserDetailsDto details = userService.save(USER);
-
-        boolean encryptedPassword = new BCryptPasswordEncoder().matches("123456", user.getPassword());
 
         assertEquals("John", details.name());
         assertEquals("john@email.com", details.email());
         assertEquals("CUSTOMER", details.role());
-        assertTrue(encryptedPassword);
+        assertTrue(new BCryptPasswordEncoder().matches("123456", user.getPassword()));
     }
 
     @Test
     @DisplayName(value = "Must not save user with invalid email")
-    void save_invalidUserEmail_mustThrowException() {
+    void save_invalidUserEmail_mustThrowInvalidEmailException() {
         assertThrows(InvalidEmailException.class, () -> userService.save(INVALID_EMAIL));
     }
 
@@ -65,6 +61,7 @@ class UserServiceTest {
         when(userRepository.findAll()).thenReturn(Arrays.asList(user1, user2));
         when(user1.getRole()).thenReturn(Role.CUSTOMER);
         when(user2.getRole()).thenReturn(Role.CUSTOMER);
+
         List<UserDetailsDto> users = userService.findAll();
 
         assertEquals(2, users.size());
@@ -74,7 +71,8 @@ class UserServiceTest {
     @DisplayName(value = "Must find user by id")
     void findById_existingId_mustReturnUserDetailDto() {
         User user = new User(USER);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
 
         UserDetailsDto details = userService.findById(1L);
 
@@ -85,7 +83,7 @@ class UserServiceTest {
     @Test
     @DisplayName(value = "Must throw NotFoundException if user id not exist")
     void findById_noExistingId_mustThrowNotFoundException() {
-        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> userService.findById(1L));
     }
@@ -95,7 +93,7 @@ class UserServiceTest {
     void changeRole_existingId_mustReturnUserDetailsDtoWithRoleAdmin() {
         User user = new User(USER);
 
-        when(userRepository.getReferenceById(1L)).thenReturn(user);
+        when(userRepository.getReferenceById(anyLong())).thenReturn(user);
         when(userRepository.save(any(User.class))).thenReturn(user);
 
         UserDetailsDto details = userService.changeRole(1L, "admin");
@@ -108,8 +106,8 @@ class UserServiceTest {
     void update_existingId_mustReturnUserDetailsDtoWithNameJoana() {
         User user = new User(USER);
 
-        when(userRepository.getReferenceById(1L)).thenReturn(user);
-        when(userRepository.save(any())).thenReturn(user);
+        when(userRepository.getReferenceById(anyLong())).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenReturn(user);
 
         UserDetailsDto details = userService.update(1L, USER_UPDATE);
 
@@ -118,10 +116,19 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName(value = "Must throw NotFoundException when trying to update user with no existing ID")
+    void update_noExistingId_mustThrowNotFoundException() {
+        when(userRepository.getReferenceById(anyLong())).thenReturn(null);
+
+        assertThrows(NotFoundException.class, () -> userService.update(1L, USER_UPDATE));
+    }
+
+    @Test
     @DisplayName(value = "Must delete user")
     void delete_existingId_mustDeleteUser() {
         User user = mock(User.class);
-        when(userRepository.getReferenceById(1L)).thenReturn(user);
+
+        when(userRepository.getReferenceById(anyLong())).thenReturn(user);
         when(user.getEmail()).thenReturn("email@email.com");
         doNothing().when(authService).authorizedUser(anyString());
 

@@ -40,7 +40,8 @@ class ProductServiceTest {
     void save_validProduct_mustReturnProductDetailsDto() {
         Category category = new Category("Category");
         Product product = new Product(PRODUCT, category);
-        when(categoryRepository.getReferenceById(any())).thenReturn(category);
+
+        when(categoryRepository.getReferenceById(anyLong())).thenReturn(category);
         when(productRepository.save(any())).thenReturn(product);
 
         ProductDetailsDto details = productService.save(PRODUCT);
@@ -56,7 +57,8 @@ class ProductServiceTest {
     @DisplayName(value = "Must not save product with empty name")
     void save_emptyProductName_mustThrowEmptyNameException() {
         Category category = new Category("Category");
-        when(categoryRepository.getReferenceById(any())).thenReturn(category);
+
+        when(categoryRepository.getReferenceById(anyLong())).thenReturn(category);
 
         assertThrows(EmptyNameException.class, () -> productService.save(INVALID_NAME_PRODUCT));
     }
@@ -79,12 +81,13 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName(value = "Must return product find by id")
+    @DisplayName(value = "Must find product by id")
     void findById_existingId_mustReturnProductDetailsDto() {
         Category category = new Category("Category");
         Product product = new Product(PRODUCT, category);
 
-        when(productRepository.findById(any())).thenReturn(Optional.of(product));
+        when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
+
         ProductDetailsDto details = productService.findById(1L);
 
         assertNotNull(details);
@@ -97,7 +100,7 @@ class ProductServiceTest {
     @Test
     @DisplayName(value = "Must throw not found exception with invalid id")
     void findById_noExistingId_mustThrowNotFoundException() {
-        when(productRepository.findById(any())).thenReturn(Optional.empty());
+        when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> productService.findById(1L));
     }
