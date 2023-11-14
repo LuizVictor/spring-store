@@ -82,7 +82,7 @@ class OrderServiceTest {
         Order order = new Order(user);
 
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
-        lenient().doNothing().when(authService).authorizedUser(anyString());
+        lenient().doNothing().when(authService).authorize(anyString());
 
         OrderDetailsDto details = orderService.findById(1L);
 

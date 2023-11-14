@@ -1,6 +1,7 @@
 package com.luizvictor.store.security;
 
 import com.luizvictor.store.entities.user.User;
+import com.luizvictor.store.exceptions.NotFoundException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +23,11 @@ public class UserDetailsAuth implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        try {
+            return user.getPassword();
+        } catch (NullPointerException e) {
+            throw new NotFoundException("User not found");
+        }
     }
 
     @Override

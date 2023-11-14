@@ -1,6 +1,7 @@
 package com.luizvictor.store.services;
 
 import com.luizvictor.store.entities.user.User;
+import com.luizvictor.store.exceptions.NotFoundException;
 import com.luizvictor.store.exceptions.UnauthorizedException;
 import com.luizvictor.store.repositories.UserRepository;
 import com.luizvictor.store.security.UserDetailsAuth;
@@ -19,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -41,7 +43,7 @@ class AuthenticationServiceTest {
         SecurityContext securityContext = mock(SecurityContext.class);
 
         when(authentication.getPrincipal()).thenReturn(userDetailsAuth);
-        when(userDetailsAuth.getUsername()).thenReturn("email@email.com");
+        when(userDetailsAuth.getUsername()).thenReturn(VALID_EMAIL);
 
         SecurityContextHolder.setContext(securityContext);
         when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -49,14 +51,22 @@ class AuthenticationServiceTest {
 
     @Test
     @DisplayName("Must return user details when searched by user email")
-    void loadUsersByUsername_mustReturnUserDetails() {
+    void loadUsersByUsername_validEmail_mustReturnUserDetails() {
         User user = mock(User.class);
 
-        when(userRepository.findByEmail(any())).thenReturn(user);
+        when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
         UserDetails details = authService.loadUserByUsername(VALID_EMAIL);
 
         assertNotNull(details);
         assertEquals(user.getEmail(), details.getUsername());
+    }
+
+    @Test
+    @DisplayName("Must throw NotFoundException when user is not found")
+    void loadUsersByUsername_invalidEmail_mustThrowNotFoundException() {
+        when(userRepository.findByEmail(UNAUTHORIZED_EMAIL)).thenReturn(null);
+
+        assertThrows(NotFoundException.class, () -> authService.loadUserByUsername(UNAUTHORIZED_EMAIL));
     }
 
     @Test
@@ -68,7 +78,7 @@ class AuthenticationServiceTest {
 
         doReturn(authorities).when(authentication).getAuthorities();
 
-        assertDoesNotThrow(() -> authService.authorizedUser(UNAUTHORIZED_EMAIL));
+        assertDoesNotThrow(() -> authService.authorize(UNAUTHORIZED_EMAIL));
     }
 
 
@@ -81,7 +91,7 @@ class AuthenticationServiceTest {
 
         doReturn(authorities).when(authentication).getAuthorities();
 
-        assertDoesNotThrow(() -> authService.authorizedUser(VALID_EMAIL));
+        assertDoesNotThrow(() -> authService.authorize(VALID_EMAIL));
     }
 
     @Test
@@ -93,6 +103,6 @@ class AuthenticationServiceTest {
 
         doReturn(authorities).when(authentication).getAuthorities();
 
-        assertThrows(UnauthorizedException.class, () -> authService.authorizedUser(UNAUTHORIZED_EMAIL));
+        assertThrows(UnauthorizedException.class, () -> authService.authorize(UNAUTHORIZED_EMAIL));
     }
 }

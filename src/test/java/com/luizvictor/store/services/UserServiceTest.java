@@ -130,7 +130,7 @@ class UserServiceTest {
 
         when(userRepository.getReferenceById(anyLong())).thenReturn(user);
         when(user.getEmail()).thenReturn("email@email.com");
-        doNothing().when(authService).authorizedUser(anyString());
+        doNothing().when(authService).authorize(anyString());
 
         userService.delete(1L);
 

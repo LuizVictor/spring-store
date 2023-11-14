@@ -43,13 +43,13 @@ public class OrderService {
 
     public OrderDetailsDto findById(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Order not found!"));
-        authService.authorizedUser(order.getUser().getEmail());
+        authService.authorize(order.getUser().getEmail());
         return new OrderDetailsDto(order);
     }
 
     public OrderDetailsDto save(OrderDto dto) {
         User user = userRepository.getReferenceById(dto.userId());
-        authService.authorizedUser(user.getEmail());
+        authService.authorize(user.getEmail());
         Order order = orderRepository.save(new Order(user));
         List<OrderItem> items = saveItems(dto.items(), order);
         orderItemRepository.saveAll(items);
