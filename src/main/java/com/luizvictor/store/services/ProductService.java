@@ -31,7 +31,7 @@ public class ProductService {
     }
 
     public ProductDetailsDto save(ProductDto dto) {
-        Category category = categoryRepository.getReferenceById(dto.category());
+        Category category = categoryRepository.findById(dto.category()).orElseThrow(() -> new NotFoundException("Category not found"));
         Product product = new Product(dto, category);
         return new ProductDetailsDto(productRepository.save(product));
     }

@@ -41,7 +41,7 @@ class ProductServiceTest {
         Category category = new Category("Category");
         Product product = new Product(PRODUCT, category);
 
-        when(categoryRepository.getReferenceById(anyLong())).thenReturn(category);
+        when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(category));
         when(productRepository.save(any())).thenReturn(product);
 
         ProductDetailsDto details = productService.save(PRODUCT);
@@ -58,7 +58,7 @@ class ProductServiceTest {
     void save_emptyProductName_mustThrowEmptyNameException() {
         Category category = new Category("Category");
 
-        when(categoryRepository.getReferenceById(anyLong())).thenReturn(category);
+        when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(category));
 
         assertThrows(EmptyNameException.class, () -> productService.save(INVALID_NAME_PRODUCT));
     }
