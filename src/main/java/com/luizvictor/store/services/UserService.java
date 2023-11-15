@@ -14,11 +14,9 @@ import java.util.List;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final AuthenticationService authService;
 
-    public UserService(UserRepository userRepository, AuthenticationService authService) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.authService = authService;
     }
 
     public List<UserDetailsDto> findAll() {
@@ -27,7 +25,6 @@ public class UserService {
 
     public UserDetailsDto findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-        authService.authorize(user.getEmail());
         return new UserDetailsDto(user);
     }
 
@@ -49,18 +46,15 @@ public class UserService {
     public UserDetailsDto update(Long id, UserDto dto) {
         try {
             User user = userRepository.getReferenceById(id);
-            authService.authorize(user.getEmail());
             user.update(dto);
             return new UserDetailsDto(userRepository.save(user));
-        }  catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             throw new NotFoundException("User not found");
         }
     }
 
     public void delete(Long id) {
         try {
-            User user = userRepository.getReferenceById(id);
-            authService.authorize(user.getEmail());
             userRepository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());

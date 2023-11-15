@@ -46,4 +46,17 @@ public class CustomExceptionHandler {
         );
         return ResponseEntity.status(status).body(standardException);
     }
+
+    @ExceptionHandler(UnprocessableEntityException.class)
+    public ResponseEntity<StandardException> unprocessableException(UnprocessableEntityException exception, HttpServletRequest request) {
+        String error = "Unprocessable Content";
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        StandardException standardException = new StandardException(
+                status.value(),
+                error,
+                exception.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(status).body(standardException);
+    }
 }

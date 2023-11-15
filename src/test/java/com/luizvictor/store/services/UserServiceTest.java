@@ -28,8 +28,6 @@ class UserServiceTest {
     private UserService userService;
     @Mock
     private UserRepository userRepository;
-    @Mock
-    private AuthenticationService authService;
 
     @Test
     @DisplayName(value = "Must save valid user")
@@ -126,12 +124,6 @@ class UserServiceTest {
     @Test
     @DisplayName(value = "Must delete user")
     void delete_existingId_mustDeleteUser() {
-        User user = mock(User.class);
-
-        when(userRepository.getReferenceById(anyLong())).thenReturn(user);
-        when(user.getEmail()).thenReturn("email@email.com");
-        doNothing().when(authService).authorize(anyString());
-
         userService.delete(1L);
 
         verify(userRepository, times(1)).deleteById(1L);

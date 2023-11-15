@@ -3,10 +3,12 @@ package com.luizvictor.store.resources;
 import com.luizvictor.store.entities.user.dto.UpdateUserRoleDto;
 import com.luizvictor.store.entities.user.dto.UserDetailsDto;
 import com.luizvictor.store.entities.user.dto.UserDto;
+import com.luizvictor.store.exceptions.UnprocessableEntityException;
 import com.luizvictor.store.services.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -40,9 +42,13 @@ public class UserResource {
 
     @PostMapping
     public ResponseEntity<UserDetailsDto> create(@RequestBody @Valid UserDto dto, UriComponentsBuilder uriBuilder) {
-        UserDetailsDto user = userService.save(dto);
-        URI uri = uriBuilder.path("/users/{id}").buildAndExpand(user.id()).toUri();
-        return ResponseEntity.created(uri).body(user);
+        try {
+            UserDetailsDto user = userService.save(dto);
+            URI uri = uriBuilder.path("/users/{id}").buildAndExpand(user.id()).toUri();
+            return ResponseEntity.created(uri).body(user);
+        } catch (DataIntegrityViolationException  e) {
+            throw new UnprocessableEntityException("User already registered");
+        }
     }
 
     @PatchMapping("/{id}")
