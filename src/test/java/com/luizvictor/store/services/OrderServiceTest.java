@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.luizvictor.store.common.OrderConstants.ORDER;
+import static com.luizvictor.store.common.OrderConstants.EMPTY_ORDER;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -48,7 +48,7 @@ class OrderServiceTest {
         when(orderRepository.save(any(Order.class))).thenReturn(order);
         when(orderItemRepository.saveAll(anyList())).thenReturn(new ArrayList<>());
 
-        OrderDetailsDto details = orderService.save(ORDER);
+        OrderDetailsDto details = orderService.save(EMPTY_ORDER);
 
         assertNotNull(details);
         assertEquals(0, details.items().size());

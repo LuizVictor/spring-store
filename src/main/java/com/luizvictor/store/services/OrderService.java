@@ -23,18 +23,16 @@ public class OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final OrderItemRepository orderItemRepository;
-    private final AuthenticationService authService;
 
     public OrderService(
             OrderRepository orderRepository,
             UserRepository userRepository,
             ProductRepository productRepository,
-            OrderItemRepository orderItem, AuthenticationService authService) {
+            OrderItemRepository orderItem) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.orderItemRepository = orderItem;
-        this.authService = authService;
     }
 
     public List<OrderDetailsDto> findAll() {
@@ -43,13 +41,11 @@ public class OrderService {
 
     public OrderDetailsDto findById(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Order not found!"));
-        authService.authorize(order.getUser().getEmail());
         return new OrderDetailsDto(order);
     }
 
     public OrderDetailsDto save(OrderDto dto) {
         User user = userRepository.getReferenceById(dto.userId());
-        authService.authorize(user.getEmail());
         Order order = orderRepository.save(new Order(user));
         List<OrderItem> items = saveItems(dto.items(), order);
         orderItemRepository.saveAll(items);
