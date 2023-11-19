@@ -39,13 +39,21 @@ public class OrderService {
         try {
             return orderRepository.findAll().stream().map(OrderDetailsDto::new).toList();
         } catch (NullPointerException e) {
-            throw new NotFoundException("Orders not found!");
+            throw new NotFoundException("Orders not found");
         }
     }
 
     public OrderDetailsDto findById(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Order not found!"));
         return new OrderDetailsDto(order);
+    }
+
+    public List<OrderDetailsDto> findByEmail(String email) {
+        List<Order> orders = orderRepository.findByUserEmail(email);
+        if (orders.isEmpty()) {
+            throw new NotFoundException("No orders found for this user");
+        }
+        return orders.stream().map(OrderDetailsDto::new).toList();
     }
 
     public OrderDetailsDto save(OrderDto dto) {

@@ -27,8 +27,8 @@ public class UserService {
         }
     }
 
-    public UserDetailsDto findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+    public UserDetailsDto findByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
         return new UserDetailsDto(user);
     }
 
@@ -47,14 +47,10 @@ public class UserService {
         }
     }
 
-    public UserDetailsDto update(Long id, UserDto dto) {
-        try {
-            User user = userRepository.getReferenceById(id);
-            user.update(dto);
-            return new UserDetailsDto(userRepository.save(user));
-        } catch (NullPointerException e) {
-            throw new NotFoundException("User not found");
-        }
+    public UserDetailsDto update(String email, UserDto dto) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found"));
+        user.update(dto);
+        return new UserDetailsDto(userRepository.save(user));
     }
 
     public void delete(Long id) {

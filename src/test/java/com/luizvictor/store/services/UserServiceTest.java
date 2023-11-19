@@ -74,13 +74,13 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName(value = "Must find user by id")
-    void findById_withExistingId_mustReturnUserDetailDto() {
+    @DisplayName(value = "Must find user by email")
+    void findByIdEmail_withExistingEmail_mustReturnUserDetailDto() {
         User user = new User(USER);
 
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-        UserDetailsDto details = userService.findById(1L);
+        UserDetailsDto details = userService.findByEmail("john@email.com");
 
         assertNotNull(details);
         assertEquals("John", details.name());
@@ -90,11 +90,11 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName(value = "Must throw NotFoundException if user id not exist")
+    @DisplayName(value = "Must throw NotFoundException if user email not exist")
     void findById_withNonExistingId_mustThrowNotFoundException() {
-        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> userService.findById(1L));
+        assertThrows(NotFoundException.class, () -> userService.findByEmail("john@email.com"));
     }
 
     @Test
@@ -123,10 +123,10 @@ class UserServiceTest {
     void update_withExistingUser_mustReturnUserDetailsDtoWithNameJoana() {
         User user = new User(USER);
 
-        when(userRepository.getReferenceById(anyLong())).thenReturn(user);
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        UserDetailsDto details = userService.update(1L, USER_UPDATE);
+        UserDetailsDto details = userService.update("john@email.com", USER_UPDATE);
 
         assertEquals("Joanna Doe", details.name());
         assertEquals("joanna@email.com", details.email());
@@ -135,11 +135,11 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName(value = "Must throw NotFoundException when trying to update user with no existing ID")
+    @DisplayName(value = "Must throw NotFoundException when trying to update user with no existing email")
     void update_withNonExistingUser_mustThrowNotFoundException() {
-        when(userRepository.getReferenceById(anyLong())).thenReturn(null);
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> userService.update(1L, USER_UPDATE));
+        assertThrows(NotFoundException.class, () -> userService.update("john@email.com", USER_UPDATE));
     }
 
     @Test

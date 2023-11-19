@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-@WithMockUser(authorities = "ROLE_ADMIN")
+@WithMockUser(username = "john@email.com", password = "123456", authorities = "ROLE_ADMIN")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class OrderResourceTest {
     @Autowired
@@ -89,7 +89,7 @@ class OrderResourceTest {
     }
 
     @Test
-    @DisplayName(value = "Must find all products saved")
+    @DisplayName(value = "Must find all orders saved")
     void findAll_withSavedData_mustReturnStatusOk() throws Exception {
         mvc.perform(get("/orders").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
@@ -97,20 +97,20 @@ class OrderResourceTest {
     }
 
     @Test
-    @DisplayName(value = "Must find order with valid id")
-    void findById_withExistingId_mustReturnStatusOk() throws Exception {
-        mvc.perform(get("/orders/{id}", 1)
+    @DisplayName(value = "Must find order with valid user email")
+    void findByIdUserEmail_withExistingId_mustReturnStatusOk() throws Exception {
+        mvc.perform(get("/orders/my-orders")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.user").value("John"))
-                .andExpect(jsonPath("$.status").value("PAID"));
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].id").value(1));
     }
 
     @Test
-    @DisplayName(value = "Must return 404 when search product with no existing id")
+    @DisplayName(value = "Must return 404 when search orders with no existing email")
+    @WithMockUser(username = "email@email.com", password = "123456", authorities = "ROLE_ADMIN")
     void findById_withNonExistingId_mustReturnStatusNotFound() throws Exception {
-        mvc.perform(get("/orders/{id}", 2)
+        mvc.perform(get("/orders/my-orders")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -31,9 +32,9 @@ public class OrderResource {
         return ResponseEntity.ok().body(orders);
     }
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<OrderDetailsDto> findById(@PathVariable Long id) {
-        OrderDetailsDto orders = orderService.findById(id);
+    @GetMapping(value = "/my-orders")
+    public ResponseEntity<List<OrderDetailsDto>> findByUserEmail(Principal principal) {
+        List<OrderDetailsDto> orders = orderService.findByEmail(principal.getName());
         return ResponseEntity.ok().body(orders);
     }
 

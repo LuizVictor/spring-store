@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -34,10 +35,10 @@ public class UserResource {
         return ResponseEntity.ok().body(users);
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/my-account")
     @SecurityRequirement(name = "bearer-key")
-    public ResponseEntity<UserDetailsDto> findById(@PathVariable Long id) {
-        UserDetailsDto user = userService.findById(id);
+    public ResponseEntity<UserDetailsDto> findByEmail(Principal principal) {
+        UserDetailsDto user = userService.findByEmail(principal.getName());
         return ResponseEntity.ok().body(user);
     }
 
@@ -59,10 +60,10 @@ public class UserResource {
         return ResponseEntity.ok().body(user);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/my-account")
     @SecurityRequirement(name = "bearer-key")
-    public ResponseEntity<UserDetailsDto> update(@PathVariable Long id, @RequestBody @Valid UserDto dto) {
-        UserDetailsDto user = userService.update(id, dto);
+    public ResponseEntity<UserDetailsDto> update(Principal principal, @RequestBody @Valid UserDto dto) {
+        UserDetailsDto user = userService.update(principal.getName(), dto);
         return ResponseEntity.ok().body(user);
     }
 
