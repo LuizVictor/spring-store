@@ -6,7 +6,9 @@ import com.luizvictor.store.repositories.CategoryRepository;
 import com.luizvictor.store.repositories.ProductRepository;
 import com.luizvictor.store.services.ProductService;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +17,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.luizvictor.store.common.ProductConstants.*;
+import static com.luizvictor.store.common.ProductConstants.INVALID_NAME_PRODUCT;
+import static com.luizvictor.store.common.ProductConstants.PRODUCT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,16 +33,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProductResourceTest {
     @Autowired
     private MockMvc mvc;
-
     @Autowired
     private ObjectMapper mapper;
-
     @Autowired
     private ProductService productService;
-
     @Autowired
     private ProductRepository productRepository;
-
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -48,33 +47,6 @@ class ProductResourceTest {
         Category category = new Category("category");
         categoryRepository.save(category);
         productService.save(PRODUCT);
-    }
-
-    @Test
-    @DisplayName(value = "Must find all products saved")
-    void findAll_mustReturnAllProductsSaved() throws Exception {
-        mvc.perform(get("/products").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-
-        assertEquals(1, productRepository.count());
-    }
-
-    @Test
-    @DisplayName(value = "Must find product with valid id")
-    void findById_withExistingId_mustReturnStatusOk() throws Exception {
-        mvc.perform(get("/products/{id}", 1)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("Product"))
-                .andExpect(jsonPath("$.category").value("category"));
-    }
-
-    @Test
-    @DisplayName(value = "Must return 404 when search product with no existing id")
-    void findById_withNonExistingId_mustReturnStatusNotFound() throws Exception {
-        mvc.perform(get("/products/{id}", 2)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -100,5 +72,42 @@ class ProductResourceTest {
                 .andExpect(status().isBadRequest());
 
         assertEquals(1, productRepository.count());
+    }
+
+    @Test
+    @DisplayName(value = "Must find all products saved")
+    void findAll_withSavedData_mustReturnStatusOk() throws Exception {
+        mvc.perform(get("/products").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+
+        assertEquals(1, productRepository.count());
+    }
+
+    @Test
+    @DisplayName(value = "Must find all products saved")
+    void findAll_withEmptyData_mustReturnStatusNotFound() throws Exception {
+        productRepository.deleteAll();
+        mvc.perform(get("/products").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        assertEquals(0, productRepository.count());
+    }
+
+    @Test
+    @DisplayName(value = "Must find product with valid id")
+    void findById_withExistingId_mustReturnStatusOk() throws Exception {
+        mvc.perform(get("/products/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Product"))
+                .andExpect(jsonPath("$.category").value("category"));
+    }
+
+    @Test
+    @DisplayName(value = "Must return 404 when search product with no existing id")
+    void findById_withNonExistingId_mustReturnStatusNotFound() throws Exception {
+        mvc.perform(get("/products/{id}", 2)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }

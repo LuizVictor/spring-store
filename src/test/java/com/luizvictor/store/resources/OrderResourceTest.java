@@ -64,33 +64,6 @@ class OrderResourceTest {
     }
 
     @Test
-    @DisplayName(value = "Must find all products saved")
-    void findAll_mustReturnAllProductsSaved() throws Exception {
-        mvc.perform(get("/orders").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
-
-        assertEquals(1, orderRepository.count());
-    }
-
-    @Test
-    @DisplayName(value = "Must find order with valid id")
-    void findById_withExistingId_mustReturnStatusOk() throws Exception {
-        mvc.perform(get("/orders/{id}", 1)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.user").value("John"))
-                .andExpect(jsonPath("$.status").value("PAID"));
-    }
-
-    @Test
-    @DisplayName(value = "Must return 404 when search product with no existing id")
-    void findById_withNonExistingId_mustReturnStatusNotFound() throws Exception {
-        mvc.perform(get("/orders/{id}", 2)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     @DisplayName(value = "Must save order")
     void save_withValidData_mustReturnStatusCreated() throws Exception {
         mvc.perform(post("/orders")
@@ -113,6 +86,33 @@ class OrderResourceTest {
                 .andExpect(status().isBadRequest());
 
         assertEquals(1, orderRepository.count());
+    }
+
+    @Test
+    @DisplayName(value = "Must find all products saved")
+    void findAll_withSavedData_mustReturnStatusOk() throws Exception {
+        mvc.perform(get("/orders").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+
+        assertEquals(1, orderRepository.count());
+    }
+
+    @Test
+    @DisplayName(value = "Must find order with valid id")
+    void findById_withExistingId_mustReturnStatusOk() throws Exception {
+        mvc.perform(get("/orders/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.user").value("John"))
+                .andExpect(jsonPath("$.status").value("PAID"));
+    }
+
+    @Test
+    @DisplayName(value = "Must return 404 when search product with no existing id")
+    void findById_withNonExistingId_mustReturnStatusNotFound() throws Exception {
+        mvc.perform(get("/orders/{id}", 2)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test

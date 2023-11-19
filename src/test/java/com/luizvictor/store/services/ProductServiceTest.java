@@ -28,20 +28,19 @@ import static org.mockito.Mockito.*;
 class ProductServiceTest {
     @InjectMocks
     private ProductService productService;
-
     @Mock
     private ProductRepository productRepository;
-
     @Mock
     private CategoryRepository categoryRepository;
 
-    @Test
-    @DisplayName(value = "Must save valid product")
-    void save_validProduct_mustReturnProductDetailsDto() {
-        Category category = new Category("Category");
-        Product product = new Product(PRODUCT, category);
+    private static final Category CATEGORY = new Category("Category");
 
-        when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(category));
+    @Test
+    @DisplayName(value = "Must save product")
+    void save_withValidProduct_mustReturnProductDetailsDto() {
+        Product product = new Product(PRODUCT, CATEGORY);
+
+        when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(CATEGORY));
         when(productRepository.save(any())).thenReturn(product);
 
         ProductDetailsDto details = productService.save(PRODUCT);
@@ -55,24 +54,21 @@ class ProductServiceTest {
 
     @Test
     @DisplayName(value = "Must not save product with empty name")
-    void save_emptyProductName_mustThrowEmptyNameException() {
-        Category category = new Category("Category");
-
-        when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(category));
+    void save_withEmptyName_mustThrowEmptyNameException() {
+        when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(CATEGORY));
 
         assertThrows(EmptyNameException.class, () -> productService.save(INVALID_NAME_PRODUCT));
     }
 
     @Test
     @DisplayName(value = "Must return list of products saved")
-    void findAll_mustReturnListOfProductDetailsDto() {
+    void findAll_withSavedData_mustReturnListOfProductDetailsDto() {
         Product product1 = mock(Product.class);
         Product product2 = mock(Product.class);
-        Category category = mock(Category.class);
 
         when(productRepository.findAll()).thenReturn(Arrays.asList(product1, product2));
-        when(product1.getCategory()).thenReturn(category);
-        when(product2.getCategory()).thenReturn(category);
+        when(product1.getCategory()).thenReturn(CATEGORY);
+        when(product2.getCategory()).thenReturn(CATEGORY);
 
         List<ProductDetailsDto> details = productService.findAll();
 
@@ -81,10 +77,16 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName(value = "Must throw NotFoundException if repository is empty")
+    void findAll_withEmptyData_mustThrowNotFoundException() {
+        when(productRepository.findAll()).thenReturn(null);
+        assertThrows(NotFoundException.class, () -> productService.findAll());
+    }
+
+    @Test
     @DisplayName(value = "Must find product by id")
-    void findById_existingId_mustReturnProductDetailsDto() {
-        Category category = new Category("Category");
-        Product product = new Product(PRODUCT, category);
+    void findById_withExistingId_mustReturnProductDetailsDto() {
+        Product product = new Product(PRODUCT, CATEGORY);
 
         when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
 
@@ -99,7 +101,7 @@ class ProductServiceTest {
 
     @Test
     @DisplayName(value = "Must throw not found exception with invalid id")
-    void findById_noExistingId_mustThrowNotFoundException() {
+    void findById_withNonExistingId_mustThrowNotFoundException() {
         when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> productService.findById(1L));

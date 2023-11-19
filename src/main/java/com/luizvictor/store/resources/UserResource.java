@@ -30,6 +30,7 @@ public class UserResource {
     @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<List<UserDetailsDto>> findAll() {
         List<UserDetailsDto> users = userService.findAll();
+        System.out.println("List of users: " + users);
         return ResponseEntity.ok().body(users);
     }
 
@@ -41,7 +42,7 @@ public class UserResource {
     }
 
     @PostMapping
-    public ResponseEntity<UserDetailsDto> create(@RequestBody @Valid UserDto dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<UserDetailsDto> save(@RequestBody @Valid UserDto dto, UriComponentsBuilder uriBuilder) {
         try {
             UserDetailsDto user = userService.save(dto);
             URI uri = uriBuilder.path("/users/{id}").buildAndExpand(user.id()).toUri();

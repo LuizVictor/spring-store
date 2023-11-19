@@ -35,12 +35,10 @@ class OrderServiceTest {
     private UserRepository userRepository;
     @Mock
     private OrderItemRepository orderItemRepository;
-    @Mock
-    private AuthenticationService authService;
 
     @Test
-    @DisplayName(value = "Must save valid order")
-    void save_validOrder_mustReturnOrderDetailsDto() {
+    @DisplayName(value = "Must save order")
+    void save_withValidOrder_mustReturnOrderDetailsDto() {
         User user = mock(User.class);
         Order order = new Order(user);
 
@@ -58,7 +56,7 @@ class OrderServiceTest {
 
     @Test
     @DisplayName(value = "Must return list of orders saved")
-    void findAll_mustReturnListOfOrderDetailsDto() {
+    void findAll_withDataSaved_mustReturnListOfOrderDetailsDto() {
         User user = mock(User.class);
         Order order1 = mock(Order.class);
         Order order2 = mock(Order.class);
@@ -76,13 +74,20 @@ class OrderServiceTest {
     }
 
     @Test
+    @DisplayName(value = "Must throw NotFoundException if repository is empty")
+    void findAll_withEmptyData_mustThrowNotFoundException() {
+        when(orderRepository.findAll()).thenReturn(null);
+
+        assertThrows(NotFoundException.class, () -> orderService.findAll());
+    }
+
+    @Test
     @DisplayName(value = "Must find order by id")
-    void findById_existingId_mustReturnOrderDetailsDto() {
+    void findById_withExistingId_mustReturnOrderDetailsDto() {
         User user = mock(User.class);
         Order order = new Order(user);
 
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
-        lenient().doNothing().when(authService).authorize(anyString());
 
         OrderDetailsDto details = orderService.findById(1L);
 
@@ -102,7 +107,7 @@ class OrderServiceTest {
 
     @Test
     @DisplayName(value = "Must update order status")
-    void updateStatus_existingId_mustReturnOrderDetailsDtoWithStatusDelivered() {
+    void updateStatus_withExistingOrder_mustReturnOrderDetailsDtoWithStatusDelivered() {
         User user = mock(User.class);
         Order order = new Order(user);
 
@@ -119,7 +124,7 @@ class OrderServiceTest {
 
     @Test
     @DisplayName(value = "Must throw NotFoundException when trying to update status with no existing ID")
-    void updateStatus_noExistingId_mustThrowNotFoundException() {
+    void updateStatus_withNonExistingId_mustThrowNotFoundException() {
         when(orderRepository.getReferenceById(anyLong())).thenReturn(null);
 
         assertThrows(NotFoundException.class, () -> orderService.updateStatus(1L, "delivered"));

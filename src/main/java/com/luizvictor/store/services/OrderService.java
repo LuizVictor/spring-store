@@ -36,7 +36,11 @@ public class OrderService {
     }
 
     public List<OrderDetailsDto> findAll() {
-        return orderRepository.findAll().stream().map(OrderDetailsDto::new).toList();
+        try {
+            return orderRepository.findAll().stream().map(OrderDetailsDto::new).toList();
+        } catch (NullPointerException e) {
+            throw new NotFoundException("Orders not found!");
+        }
     }
 
     public OrderDetailsDto findById(Long id) {

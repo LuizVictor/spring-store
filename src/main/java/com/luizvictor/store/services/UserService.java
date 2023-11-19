@@ -20,7 +20,11 @@ public class UserService {
     }
 
     public List<UserDetailsDto> findAll() {
-        return userRepository.findAll().stream().map(UserDetailsDto::new).toList();
+        try {
+            return userRepository.findAll().stream().map(UserDetailsDto::new).toList();
+        } catch (NullPointerException e) {
+            throw new NotFoundException("Users not found");
+        }
     }
 
     public UserDetailsDto findById(Long id) {

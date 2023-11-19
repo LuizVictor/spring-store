@@ -27,10 +27,10 @@ class OrderItemTest {
         Product product = mock(Product.class);
         Order order = mock(Order.class);
 
-        when(product.getPrice()).thenReturn(new BigDecimal(15));
+        when(product.getPrice()).thenReturn(BigDecimal.valueOf(15));
 
         OrderItem orderItem = new OrderItem(2, product, order);
 
-        assertEquals(new BigDecimal(30), orderItem.subTotal());
+        assertEquals(BigDecimal.valueOf(30), orderItem.subTotal());
     }
 }

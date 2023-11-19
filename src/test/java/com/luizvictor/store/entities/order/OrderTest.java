@@ -35,7 +35,7 @@ class OrderTest {
 
     @Test
     @DisplayName(value = "Must add itens to order")
-    void mustAddOrderItemItensToOrder() {
+    void mustAddOrderItemToOrder() {
         User user = mock(User.class);
 
         Order order = new Order(user);
@@ -44,10 +44,11 @@ class OrderTest {
 
         order.addItem(orderItem1);
         order.addItem(orderItem2);
-        when(orderItem1.subTotal()).thenReturn(new BigDecimal(100));
-        when(orderItem2.subTotal()).thenReturn(new BigDecimal(200));
+
+        when(orderItem1.subTotal()).thenReturn(BigDecimal.valueOf(100));
+        when(orderItem2.subTotal()).thenReturn(BigDecimal.valueOf(200));
 
         assertEquals(2, order.getItens().size());
-        assertEquals(new BigDecimal(300), order.total());
+        assertEquals(BigDecimal.valueOf(300), order.total());
     }
 }

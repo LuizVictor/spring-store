@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +31,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName(value = "Must save valid user")
-    void save_validUser_mustReturnUserDetailsDto() {
+    void save_withValidUser_mustReturnUserDetailsDto() {
         User user = new User(USER);
 
         when(userRepository.save(any(User.class))).thenReturn(user);
@@ -41,18 +41,18 @@ class UserServiceTest {
         assertEquals("John", details.name());
         assertEquals("john@email.com", details.email());
         assertEquals("CUSTOMER", details.role());
-        assertTrue(new BCryptPasswordEncoder().matches("123456", user.getPassword()));
+        assertTrue(BCrypt.checkpw("123456", user.getPassword()));
     }
 
     @Test
     @DisplayName(value = "Must not save user with invalid email")
-    void save_invalidUserEmail_mustThrowInvalidEmailException() {
+    void save_withInvalidUserEmail_mustThrowInvalidEmailException() {
         assertThrows(InvalidEmailException.class, () -> userService.save(INVALID_EMAIL));
     }
 
     @Test
     @DisplayName(value = "Must find all users saved")
-    void findAll_mustReturnListOfUserDetailsDto() {
+    void findAll_withSavedData_mustReturnListOfUserDetailsDto() {
         User user1 = mock(User.class);
         User user2 = mock(User.class);
 
@@ -66,8 +66,16 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName(value = "Must throw NotFoundException if repository is empty")
+    void findAll_withEmptyData_mustThrowNotFoundException() {
+        when(userRepository.findAll()).thenReturn(null);
+
+        assertThrows(NotFoundException.class, () -> userService.findAll());
+    }
+
+    @Test
     @DisplayName(value = "Must find user by id")
-    void findById_existingId_mustReturnUserDetailDto() {
+    void findById_withExistingId_mustReturnUserDetailDto() {
         User user = new User(USER);
 
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
@@ -76,11 +84,14 @@ class UserServiceTest {
 
         assertNotNull(details);
         assertEquals("John", details.name());
+        assertEquals("john@email.com", details.email());
+        assertEquals("CUSTOMER", details.role());
+        assertTrue(BCrypt.checkpw("123456", user.getPassword()));
     }
 
     @Test
     @DisplayName(value = "Must throw NotFoundException if user id not exist")
-    void findById_noExistingId_mustThrowNotFoundException() {
+    void findById_withNonExistingId_mustThrowNotFoundException() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> userService.findById(1L));
@@ -88,7 +99,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName(value = "Must change user role from CUSTOMER to ADMIN")
-    void changeRole_existingId_mustReturnUserDetailsDtoWithRoleAdmin() {
+    void changeRole_withExistingUser_mustReturnUserDetailsDtoWithRoleAdmin() {
         User user = new User(USER);
 
         when(userRepository.getReferenceById(anyLong())).thenReturn(user);
@@ -100,8 +111,16 @@ class UserServiceTest {
     }
 
     @Test
+    @DisplayName(value = "Must throw NotFoundException when trying to changeRole ofd user with no existing ID")
+    void changeRole_withNonExistingUser_mustThrowNotFoundException() {
+        when(userRepository.getReferenceById(anyLong())).thenReturn(null);
+
+        assertThrows(NotFoundException.class, () -> userService.changeRole(1L, "admin"));
+    }
+
+    @Test
     @DisplayName(value = "Must update user")
-    void update_existingId_mustReturnUserDetailsDtoWithNameJoana() {
+    void update_withExistingUser_mustReturnUserDetailsDtoWithNameJoana() {
         User user = new User(USER);
 
         when(userRepository.getReferenceById(anyLong())).thenReturn(user);
@@ -111,11 +130,13 @@ class UserServiceTest {
 
         assertEquals("Joanna Doe", details.name());
         assertEquals("joanna@email.com", details.email());
+        assertEquals("CUSTOMER", details.role());
+        assertTrue(BCrypt.checkpw("654321", user.getPassword()));
     }
 
     @Test
     @DisplayName(value = "Must throw NotFoundException when trying to update user with no existing ID")
-    void update_noExistingId_mustThrowNotFoundException() {
+    void update_withNonExistingUser_mustThrowNotFoundException() {
         when(userRepository.getReferenceById(anyLong())).thenReturn(null);
 
         assertThrows(NotFoundException.class, () -> userService.update(1L, USER_UPDATE));
@@ -123,7 +144,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName(value = "Must delete user")
-    void delete_existingId_mustDeleteUser() {
+    void delete_existingUser_mustDeleteUser() {
         userService.delete(1L);
 
         verify(userRepository, times(1)).deleteById(1L);

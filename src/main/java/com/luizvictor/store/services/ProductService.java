@@ -22,7 +22,15 @@ public class ProductService {
     }
 
     public List<ProductDetailsDto> findAll() {
-        return productRepository.findAll().stream().map(ProductDetailsDto::new).toList();
+        try {
+            List<Product> products = productRepository.findAll();
+            if (products.isEmpty()) {
+                throw new NotFoundException("Products not found!");
+            }
+            return products.stream().map(ProductDetailsDto::new).toList();
+        } catch (NullPointerException e) {
+            throw new NotFoundException("Products not found!");
+        }
     }
 
     public ProductDetailsDto findById(Long id) {

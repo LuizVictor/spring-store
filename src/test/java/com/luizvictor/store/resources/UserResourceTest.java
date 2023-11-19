@@ -46,8 +46,8 @@ class UserResourceTest {
     }
 
     @Test
-    @DisplayName(value = "Must create user")
-    void create_withValidData_mustReturnStatusCreated() throws Exception {
+    @DisplayName(value = "Must save user")
+    void save_withValidData_mustReturnStatusCreated() throws Exception {
         mvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsBytes(USER_UPDATE)))
@@ -57,8 +57,8 @@ class UserResourceTest {
     }
 
     @Test
-    @DisplayName(value = "Must not create user with invalid data and must return status 400")
-    void create_withInvalidData_mustReturnStatusBadRequest() throws Exception {
+    @DisplayName(value = "Must not save user with invalid data and must return status 400")
+    void save_withInvalidData_mustReturnStatusBadRequest() throws Exception {
         mvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsBytes(INVALID_EMAIL)))
@@ -68,8 +68,8 @@ class UserResourceTest {
     }
 
     @Test
-    @DisplayName(value = "Must not create user with repeated email and must return status 422")
-    void create_withEmailRepeated_mustReturnStatusUnprocessableEntity() throws Exception {
+    @DisplayName(value = "Must not save user with repeated email and must return status 422")
+    void save_withEmailRepeated_mustReturnStatusUnprocessableEntity() throws Exception {
         mvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsBytes(USER)))
@@ -80,7 +80,7 @@ class UserResourceTest {
 
     @Test
     @DisplayName(value = "Must find all users saved")
-    void findAll_mustReturnListOfUserDetailsDto() throws Exception {
+    void findAll_withSavedData_mustReturnStatusOk() throws Exception {
         mvc.perform(get("/users").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
         assertEquals(1, userRepository.count());
@@ -105,7 +105,7 @@ class UserResourceTest {
 
     @Test
     @DisplayName(value = "Must update user")
-    void update_withValidData_mustUpdateUser() throws Exception {
+    void update_withValidData_mustReturnOk() throws Exception {
         mvc.perform(put("/users/{id}", ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsBytes(USER_UPDATE)))
@@ -116,8 +116,16 @@ class UserResourceTest {
     }
 
     @Test
+    void update_withInvalidData_mustReturnBadRequest() throws Exception {
+        mvc.perform(put("/users/{id}", ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsBytes(INVALID_EMAIL)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DisplayName(value = "Must change user role from CONSUMER to ADMIN")
-    void changeRole_withValidDate_mustChangeUserRoleToAdmin() throws Exception {
+    void changeRole_withValidData_mustChangeUserRoleToAdmin() throws Exception {
         UpdateUserRoleDto roleDto = new UpdateUserRoleDto("admin");
         mvc.perform(patch("/users/{id}", ID)
                         .contentType(MediaType.APPLICATION_JSON)

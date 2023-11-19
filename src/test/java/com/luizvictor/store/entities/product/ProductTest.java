@@ -53,7 +53,7 @@ class ProductTest {
 
     @Test
     @DisplayName(value = "Must not create product with negative price")
-    void mustNotCreateProductWithPriceEqualsZeroNegativePrice() {
+    void mustNotCreateProductWithNegativePrice() {
         Exception exception = assertThrows(InvalidPriceException.class, () -> {
             Category category = new Category("Category");
             new Product(INVALID_PRICE_NEGATIVE_PRODUCT, category);
