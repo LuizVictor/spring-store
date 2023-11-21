@@ -3,10 +3,14 @@ package com.luizvictor.store.services;
 import com.luizvictor.store.entities.order.Order;
 import com.luizvictor.store.entities.order.OrderStatus;
 import com.luizvictor.store.entities.order.dto.OrderDetailsDto;
+import com.luizvictor.store.entities.payment.Payment;
+import com.luizvictor.store.entities.payment.PaymentDetailsDto;
+import com.luizvictor.store.entities.payment.PaymentDto;
 import com.luizvictor.store.entities.user.User;
 import com.luizvictor.store.exceptions.NotFoundException;
 import com.luizvictor.store.repositories.OrderItemRepository;
 import com.luizvictor.store.repositories.OrderRepository;
+import com.luizvictor.store.repositories.PaymentRepository;
 import com.luizvictor.store.repositories.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,6 +38,8 @@ class OrderServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
+    private PaymentRepository paymentRepository;
+    @Mock
     private OrderItemRepository orderItemRepository;
 
     @Test
@@ -51,7 +57,7 @@ class OrderServiceTest {
         assertNotNull(details);
         assertEquals(0, details.items().size());
         assertEquals(BigDecimal.ZERO, details.total());
-        assertEquals("PAID", details.status());
+        assertEquals("WAITING_PAYMENT", details.status());
     }
 
     @Test
@@ -94,7 +100,7 @@ class OrderServiceTest {
         assertNotNull(details);
         assertEquals(0, details.items().size());
         assertEquals(BigDecimal.ZERO, details.total());
-        assertEquals("PAID", details.status());
+        assertEquals("WAITING_PAYMENT", details.status());
     }
 
     @Test
@@ -120,6 +126,24 @@ class OrderServiceTest {
         assertEquals(0, details.items().size());
         assertEquals(BigDecimal.ZERO, details.total());
         assertEquals("DELIVERED", details.status());
+    }
+
+    @Test
+    @DisplayName(value = "Must pay order")
+    void pay_mustReturnPaymentDetailsDto() {
+        Order order = mock(Order.class);
+        Payment payment = new Payment("credit_card", order);
+
+        when(orderRepository.getReferenceById(anyLong())).thenReturn(order);
+        when(paymentRepository.save(any(Payment.class))).thenReturn(payment);
+        when(order.getOrderStatus()).thenReturn(OrderStatus.PAID);
+
+        PaymentDto paymentDto = new PaymentDto("credit_card", 1L);
+        PaymentDetailsDto details = orderService.payOrder(paymentDto);
+
+        assertNotNull(details);
+        assertEquals(details.transaction(), "CREDIT_CARD");
+        assertEquals(details.orderStatus(), "PAID");
     }
 
     @Test

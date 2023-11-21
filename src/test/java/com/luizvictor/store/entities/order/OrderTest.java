@@ -18,7 +18,7 @@ class OrderTest {
         Order order = new Order(user);
 
         assertSame(user, order.getUser());
-        assertEquals("PAID", order.getOrderStatus().name());
+        assertEquals("WAITING_PAYMENT", order.getOrderStatus().name());
         assertNotNull(order.getCreatedAt());
     }
 

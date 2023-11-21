@@ -31,7 +31,7 @@ public class Order {
 
     public Order(User user) {
         this.user = user;
-        this.orderStatus = OrderStatus.PAID;
+        this.orderStatus = OrderStatus.WAITING_PAYMENT;
     }
 
     public void updateStatus(String status) {

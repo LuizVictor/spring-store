@@ -12,7 +12,7 @@ public class OrderConstants {
     public static OrderDto ORDER = new OrderDto(1L, items());
     public static OrderDto EMPTY_ORDER = new OrderDto(1L, new ArrayList<>());
     public static OrderStatusDto ORDER_STATUS_UPDATE = new OrderStatusDto("delivered");
-    public static OrderStatusDto INVALID_ORDER_STATUS_UPDATE = new OrderStatusDto("delivered");
+    public static OrderStatusDto INVALID_ORDER_STATUS_UPDATE = new OrderStatusDto("");
 
     private static List<OrderItemDto> items() {
         OrderItemDto orderItemDto = new OrderItemDto(1L, 2);

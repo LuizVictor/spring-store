@@ -5,13 +5,13 @@ import com.luizvictor.store.entities.order.dto.OrderDetailsDto;
 import com.luizvictor.store.entities.order.dto.OrderDto;
 import com.luizvictor.store.entities.orderItem.OrderItem;
 import com.luizvictor.store.entities.orderItem.OrderItemDto;
+import com.luizvictor.store.entities.payment.Payment;
+import com.luizvictor.store.entities.payment.PaymentDetailsDto;
+import com.luizvictor.store.entities.payment.PaymentDto;
 import com.luizvictor.store.entities.product.Product;
 import com.luizvictor.store.entities.user.User;
 import com.luizvictor.store.exceptions.NotFoundException;
-import com.luizvictor.store.repositories.OrderItemRepository;
-import com.luizvictor.store.repositories.OrderRepository;
-import com.luizvictor.store.repositories.ProductRepository;
-import com.luizvictor.store.repositories.UserRepository;
+import com.luizvictor.store.repositories.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,16 +23,18 @@ public class OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final OrderItemRepository orderItemRepository;
+    private final PaymentRepository paymentRepository;
 
     public OrderService(
             OrderRepository orderRepository,
             UserRepository userRepository,
             ProductRepository productRepository,
-            OrderItemRepository orderItem) {
+            OrderItemRepository orderItem, PaymentRepository paymentRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.orderItemRepository = orderItem;
+        this.paymentRepository = paymentRepository;
     }
 
     public List<OrderDetailsDto> findAll() {
@@ -70,6 +72,18 @@ public class OrderService {
             Order order = orderRepository.getReferenceById(id);
             order.updateStatus(status);
             return new OrderDetailsDto(orderRepository.save(order));
+        } catch (NullPointerException e) {
+            throw new NotFoundException("Order not found");
+        }
+    }
+
+    public PaymentDetailsDto payOrder(PaymentDto dto) {
+        try {
+            Order order = orderRepository.getReferenceById(dto.orderId());
+            Payment payment = new Payment(dto.transaction(), order);
+            order.updateStatus("paid");
+            orderRepository.save(order);
+            return new PaymentDetailsDto(paymentRepository.save(payment));
         } catch (NullPointerException e) {
             throw new NotFoundException("Order not found");
         }

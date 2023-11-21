@@ -3,6 +3,8 @@ package com.luizvictor.store.resources;
 import com.luizvictor.store.entities.order.dto.OrderDetailsDto;
 import com.luizvictor.store.entities.order.dto.OrderDto;
 import com.luizvictor.store.entities.order.dto.OrderStatusDto;
+import com.luizvictor.store.entities.payment.PaymentDetailsDto;
+import com.luizvictor.store.entities.payment.PaymentDto;
 import com.luizvictor.store.services.OrderService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,5 +51,11 @@ public class OrderResource {
     public ResponseEntity<OrderDetailsDto> updateStatus(@PathVariable Long id, @RequestBody @Valid OrderStatusDto dto) {
         OrderDetailsDto orders = orderService.updateStatus(id, dto.status());
         return ResponseEntity.ok().body(orders);
+    }
+
+    @PatchMapping("/pay")
+    public ResponseEntity<PaymentDetailsDto> pay(@RequestBody @Valid PaymentDto dto) {
+        PaymentDetailsDto payment = orderService.payOrder(dto);
+        return ResponseEntity.ok().body(payment);
     }
 }

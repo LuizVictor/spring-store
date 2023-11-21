@@ -2,8 +2,10 @@ package com.luizvictor.store.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.luizvictor.store.entities.Category;
+import com.luizvictor.store.entities.payment.PaymentDto;
 import com.luizvictor.store.repositories.CategoryRepository;
 import com.luizvictor.store.repositories.OrderRepository;
+import com.luizvictor.store.repositories.PaymentRepository;
 import com.luizvictor.store.services.OrderService;
 import com.luizvictor.store.services.ProductService;
 import com.luizvictor.store.services.UserService;
@@ -35,24 +37,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class OrderResourceTest {
     @Autowired
     private MockMvc mvc;
-
     @Autowired
     private ObjectMapper mapper;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private CategoryRepository categoryRepository;
-
     @Autowired
     private ProductService productService;
-
     @Autowired
     private OrderService orderService;
-
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     @BeforeEach
     void setUp() {
@@ -72,7 +70,7 @@ class OrderResourceTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(2))
                 .andExpect(jsonPath("$.user").value("John"))
-                .andExpect(jsonPath("$.status").value("PAID"));
+                .andExpect(jsonPath("$.status").value("WAITING_PAYMENT"));
 
         assertEquals(2, orderRepository.count());
     }
@@ -128,9 +126,26 @@ class OrderResourceTest {
     @Test
     @DisplayName(value = "Must not update order status with invalid data and must return status 400")
     void updateStatus_withInvalidData_mustReturnStatusBadRequest() throws Exception {
-        mvc.perform(post("/orders")
+        mvc.perform(patch("/orders/{id}", 1L)
                         .content(mapper.writeValueAsBytes(INVALID_ORDER_STATUS_UPDATE))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName(value = "Must pay order")
+    void pay_mustReturnStatusOk() throws Exception {
+        PaymentDto paymentDto = new PaymentDto("credit_card", 1L);
+        mvc.perform(patch("/orders/pay")
+                        .content(mapper.writeValueAsBytes(paymentDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.transaction").value("CREDIT_CARD"))
+                .andExpect(jsonPath("$.orderId").value(1))
+                .andExpect(jsonPath("$.orderStatus").value("PAID"))
+                .andExpect(jsonPath("$.createdAt").isNotEmpty());
+
+        assertEquals(1, paymentRepository.count());
     }
 }
