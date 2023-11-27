@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.luizvictor</groupId>
-    <artifactId>course</artifactId>
+    <artifactId>spring-store</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>course</name>
-    <description>course</description>
+    <name>SpringStore</name>
+    <description>store rest api</description>
     <properties>
         <java.version>17</java.version>
     </properties>
