@@ -17,8 +17,8 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 @Configuration
-@Profile("test")
-public class TestConfig /*implements CommandLineRunner*/ {
+@Profile("dev")
+public class TestConfig implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
     @Autowired
